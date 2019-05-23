@@ -1,3 +1,4 @@
+#execute with scrapy runspider postillon_spider.py -o ../data/postillon.json
 import scrapy
 
 class PostillonSpider(scrapy.Spider):
@@ -8,14 +9,15 @@ class PostillonSpider(scrapy.Spider):
     ]
 
     def parse(self, response):
-        for title in response.xpath("//h3[@class='post-title entry-title']"):
+        for title in response.xpath("//div[@class='post hentry']"):
             yield{
-                'title': title.xpath(".//a").extract_first()
+                'title': title.xpath("./h3/a/text()").extract_first()
             }
-        next_page = response.xpath("//div[@class='blog-pager']/span/a/@href").extract_first()
+        next_page = response.xpath("//div[@class='blog-pager']/span[@id='blog-pager-older-link']/a/@href").extract_first()
+        print("NÄCHSTE SEITE",next_page)
         if next_page is not None:
             next_page_link = response.urljoin(next_page)
-            yield scrapy.Request(url=next_page_link , callback=self.parse)   
+            yield scrapy.Request(url=next_page_link, callback=self.parse, dont_filter=True)
 
 
 #example for a part which has to be extracted from the .html file
