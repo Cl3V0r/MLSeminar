@@ -44,7 +44,7 @@ def crawl_kompas(url):
             #find paragraph in news content
             p = news_content.find_all('p')
             content = ' '.join(item .text for item in p)
-            news_content = content.encode('utf8', 'replace')
+            #news_content = content.encode('utf8', 'replace')#DEPRECATED PYTHON 2 STYLE
 
             #wrap in dictionary
             news_dict['id'] = idx

@@ -1,3 +1,4 @@
+#needs confirmed twitter account
 import twitter  #conda install -c conda-forge python-twitter
 import re
 import datetime
