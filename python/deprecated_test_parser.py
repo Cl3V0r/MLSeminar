@@ -58,5 +58,5 @@ def crawl_kompas(url):
 
 url = 'http://indeks.kompas.com/news/2017-08-04/'
 crawl = crawl_kompas(url)
-with open("kompas.json", "w") as f:
+with open("../data/html/test/kompas.json", "w") as f:
     json.dump(crawl, f)
