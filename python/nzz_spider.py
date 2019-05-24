@@ -11,7 +11,7 @@ class NZZSpider(scrapy.Spider):
     def parse(self, response):
         for title in response.xpath("//div[@class='teaser__content']"):
             yield{
-                'title': title.xpath("./div/text()").extract_first()
+                'title': title.xpath("./a/h2/span/text()").extract_first()
             }
         next_page = response.xpath(
             "//div[@class='pagination']/a[@class='pagination__next']/@href").extract_first()
