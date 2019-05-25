@@ -5,6 +5,7 @@ from urllib.parse import urljoin
 
 class NZZSpider(scrapy.Spider):
     i = 0
+    max_i=130
     name = "titles"
     start_urls = [
         "https://www.nzz.ch/neueste-artikel/"
@@ -20,7 +21,7 @@ class NZZSpider(scrapy.Spider):
         next_page = urljoin('https://www.nzz.ch/neueste-artikel',
                             'https://www.nzz.ch/neueste-artikel/?page='+str(self.i))
         print("NÄCHSTE SEITE", next_page)
-        if next_page is not None and self.i<3:
+        if next_page is not None and self.i<self.max_i:
             next_page_link = response.urljoin(next_page)
             yield scrapy.Request(url=next_page_link, callback=self.parse, dont_filter=True)
 
