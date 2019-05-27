@@ -11,9 +11,9 @@ class PostillonSpider(scrapy.Spider):
     def parse(self, response):
         for title in response.xpath("//div[@class='post hentry']"):
             yield{
-                'title': title.xpath("./h3/a/text()").extract_first()
+                'title': title.xpath("./h3/a/text()").get()
             }
-        next_page = response.xpath("//div[@class='blog-pager']/span[@id='blog-pager-older-link']/a/@href").extract_first()
+        next_page = response.xpath("//div[@class='blog-pager']/span[@id='blog-pager-older-link']/a/@href").get()
         print("NÄCHSTE SEITE",next_page)
         if next_page is not None:
             next_page_link = response.urljoin(next_page)

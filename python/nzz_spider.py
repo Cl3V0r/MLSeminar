@@ -1,7 +1,5 @@
 #execute with scrapy runspider nzz_spider.py -o ../data/nzz.json
 import scrapy
-from urllib.parse import urljoin
-
 
 class NZZSpider(scrapy.Spider):
     i = 0
@@ -15,7 +13,7 @@ class NZZSpider(scrapy.Spider):
         self.i+=1
         for title in response.xpath("//div[@class='teaser__content']"):
             yield{
-                'title': title.xpath("./a/h2/span/text()").extract_first()
+                'title': title.xpath("./a/h2/span/text()").get()
             }
         
         next_page = urljoin('https://www.nzz.ch/neueste-artikel',
