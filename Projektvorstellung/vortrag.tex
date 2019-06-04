@@ -69,7 +69,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Titel:
-\title{Detektion von FakeNews}
+\title{Detektion von Fake News}
 %Autor
 \author{Lars Möllerherm und Clemens Vorsmann}
 %Lehrstuhl/Fakultät
@@ -90,6 +90,47 @@
 
   \begin{frame}
     \titlepage
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Definition und Motivation}
+    \begin{itemize}
+      \item Motivation:
+      \begin{itemize}
+        \item Fake News wurde zum Anglizismus des Jahres 2016 gewählt\cite{angli}.
+        \item Größer werdende Rolle in unserer Gesellschaft.
+        \item Falsch-Informationen werden besser.
+        \item Natürlicher "Bullshit"-Filter funktioniert nicht mehr.
+      \end{itemize}
+    \end{itemize}
+    \begin{columns}
+      \column{0.6\textwidth}
+      \begin{itemize}
+        \item Definition:
+        \begin{itemize}
+        \item Es existiert der BS-Detector von Daniel Sieradski\cite{BS}.
+        \item Beinhaltet Liste fragwürdigen URL's. Artikel mit Links auf diese URL's, 
+            werden als BS gekennzeichnet.
+        \item Ist es möglich, anhand des Sprachmusters, diese Kategorisierung vorzunehmen?
+        \item Wenn ja, ist es vielleicht auch möglich ohne Kenntnis der URL einen Text zu kategorisieren. 
+            (keine Website wird gleich als Fake News Seite abgestempelt)
+        \end{itemize}
+      \end{itemize}
+      \column{0.4\textwidth}
+      \begin{figure}
+          \includegraphics[width=\textwidth]{pictures/trump-fake-news.jpg}
+          \caption{https://www.skeptiker.ch/was-sind-fake-news/}
+          \label{}
+        \end{figure}
+      \end{columns}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Beschreibung des Datensatzes}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Mögliche Alternativ-Methode}
   \end{frame}
 
 \end{document}
