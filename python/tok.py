@@ -8,10 +8,11 @@ from sklearn.feature_extraction.text import CountVectorizer
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 from pathlib import Path
+from sklearn.cluster import KMeans
 
 nltk.download('stopwords')
 tknzr= TweetTokenizer()
-stemmer = Cistem()
+stemmer = Cistem(True)
 file_in = open("../data/postillon.txt", "r")
 file_out = open("../data/postillon_stem.txt", "w")
 for line in file_in:
@@ -26,7 +27,7 @@ file_in.close()
 file_out.close()
 
 data = open("../data/postillon_stem.txt", "r")
-vectorizer = CountVectorizer(max_features=100, ngram_range=(2, 2))
+vectorizer = CountVectorizer(max_features=1000, ngram_range=(1, 3))
 X = vectorizer.fit_transform(data).toarray()
 print(vectorizer.get_feature_names())
 print(X)
@@ -38,4 +39,12 @@ wordcloud = WordCloud(background_color='white',
                       ).generate(contents)
 plt.imshow(wordcloud)
 plt.axis('off')
+plt.show()
+
+kmeans = KMeans(n_clusters=8)
+kmeans.fit(X)
+print(kmeans.labels_)
+plt.scatter(X[:, 0], X[:, 2], c=kmeans.labels_, cmap='rainbow')
+plt.scatter(kmeans.cluster_centers_[:, 0],
+            kmeans.cluster_centers_[:, 1], color='black')
 plt.show()
