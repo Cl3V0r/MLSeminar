@@ -36,8 +36,8 @@ Unterschiede zw. den einzelnen Klassen, z.b. Wordcloud, Histogramm, usw.
 - Geschwindigkeit
 
 
-# scraping **CLOSED**
+# scraping (**CLOSED**)
 - Postillon entferne "Newsticker" aus den Titeln und ziehe die Newsticker separat.
-# Vortrag Vorlage **CLOSED**
-# THEMA FINDEN **CLOSED**
+# Vortrag Vorlage (**CLOSED**)
+# Thema finden (**CLOSED**)
 ;-)
