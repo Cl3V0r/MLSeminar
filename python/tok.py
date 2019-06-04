@@ -10,7 +10,8 @@ s2 = "Grenzpostens"
 stemmer.stem(s2)
 s3 = "Ausgefeiltere"
 stemmer.stem(s3)
+print(s1,s2,s3)
 stemmer = Cistem(True)
-stemmer.stem(s1)
-stemmer.stem(s2)
-stemmer.stem(s3)
+print(stemmer.stem(s1),
+stemmer.stem(s2),
+stemmer.stem(s3))
