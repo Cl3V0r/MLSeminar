@@ -1,6 +1,5 @@
 #!usr/bin/env python
 #coding:utf8
-#from nltk.tokenize import sent_tokenize, word_tokenize
 from nltk.tokenize import TweetTokenizer
 from nltk.stem.cistem import Cistem
 from nltk.corpus import stopwords
@@ -34,8 +33,8 @@ print(X)
 
 contents = Path("../data/postillon_stem.txt").read_text()
 wordcloud = WordCloud(background_color='white',
-                      width=1200,
-                      height=1000
+                      width=1920,
+                      height=1080
                       ).generate(contents)
 plt.imshow(wordcloud)
 plt.axis('off')
