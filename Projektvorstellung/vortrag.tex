@@ -142,11 +142,22 @@
 
   \begin{frame}
     \frametitle{Mögliche Alternativ-Methode}
+    \begin{columns}
+      \column{0.3\textwidth}
+    \begin{itemize}
+      \item Random Forest Tree
+      \item Vektor mit Worthäufigkeiten als Input
+      \item Klassifizierung anhand des Blattes
+      \item Trainigszeit geht linear mit Anzahl der Bäume (Parallelisierung)
+    \end{itemize}
+    \column{0.7\textwidth}
+
     \begin{figure}
-          \includegraphics[width=\textwidth]{pictures/RF.jpg}
+          \includegraphics[width=0.6\textwidth]{pictures/RF.jpg}
           \caption{Pavel Polishchuk}
           \label{}
       \end{figure}
-  \end{frame}
+    \end{columns}
+    \end{frame}
 
 \end{document}
