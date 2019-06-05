@@ -13,11 +13,15 @@
 - feature-matrix:
    -bag of words
    -n-tuple
+   -wordvector with gensim
+   -document vector with gensim
+   -BERT???
    -weitere Arten?
 
 # Veranschaulichen des Datensatzes
-Unterschiede zw. den einzelnen Klassen, z.b. Wordcloud, Histogramm, usw.
-
+- Unterschiede zw. den einzelnen Klassen, z.b. Wordcloud, Histogramm, usw.
+- Wordvector mit tSNE o.ä. auf 2D oder 3D reduzieren und mit kNN in Bereiche einteilen
+ 
 # Neuronales Netz Modell
 - Wahl des Modells: CNN, da Matrix oder MLP, da einfach, oder was ganz anderes?
 - Wahl der Parameter (Hyperparameteroptimierung)
