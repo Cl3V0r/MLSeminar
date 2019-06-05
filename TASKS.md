@@ -6,9 +6,6 @@
 - Makefile 
 - .gitignore
 
-# Datensätze akquirieren
-Herunterladen von Kaggle und zusammenflicken der Bullshit und seriösen Texte
-
 # Präparieren des Datensatzes
 - Lemmatisation
 - Stemming
@@ -35,6 +32,8 @@ Unterschiede zw. den einzelnen Klassen, z.b. Wordcloud, Histogramm, usw.
 - Genauigkeit
 - Geschwindigkeit
 
+# Datensätze akquirieren (**CLOSED**)
+Herunterladen von Kaggle und zusammenflicken der Bullshit und seriösen Texte
 
 # scraping (**CLOSED**)
 - Postillon entferne "Newsticker" aus den Titeln und ziehe die Newsticker separat.
