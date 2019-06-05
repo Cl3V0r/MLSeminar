@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 from pathlib import Path
 from sklearn.cluster import KMeans
+from sklearn.manifold import TSNE
 
 nltk.download('stopwords')
 tknzr= TweetTokenizer()
@@ -41,10 +42,14 @@ plt.imshow(wordcloud)
 plt.axis('off')
 plt.show()
 
+X_embedded = TSNE(n_components=2).fit_transform(X)
+
 kmeans = KMeans(n_clusters=8)
-kmeans.fit(X)
+kmeans.fit(X_embedded)
 print(kmeans.labels_)
-plt.scatter(X[:, 0], X[:, 2], c=kmeans.labels_, cmap='rainbow')
+plt.scatter(X_embedded[:, 0], X_embedded[:, 1], c=kmeans.labels_, cmap='rainbow')
 plt.scatter(kmeans.cluster_centers_[:, 0],
             kmeans.cluster_centers_[:, 1], color='black')
 plt.show()
+
+
