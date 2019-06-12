@@ -5,23 +5,25 @@ import numpy as np
 from PIL import Image
 from PIL import ImageFilter
 
-trump_mask = np.array(Image.open('../data/pictures/trump_silhouette.png'))
-contents = Path('../build/preprocessed/fake_news_titles.csv').read_text()
-wordcloud = WordCloud(background_color='black',
+def plotWordcloud(s,t):
+    if(t!=""):
+       mask = np.array(Image.open('../data/pictures/'+t))
+    else:
+        mask=None
+
+    contents = Path('../build/preprocessed/'+s+".csv").read_text()
+    wordcloud = WordCloud(background_color='black',
                       width=1920,
                       height=1080,
-                      mask = trump_mask
+                      mask=mask
                       ).generate(contents)
-plt.imshow(wordcloud,interpolation='bilinear')
-plt.axis('off')
-plt.margins(x=0, y=0)
-plt.savefig("../build/plots/fake_news_titles_wordcloud.pdf")
+    plt.imshow(wordcloud, interpolation='bilinear')
+    plt.axis('off')
+    plt.margins(x=0, y=0)
+    plt.savefig("../build/plots/"+s+"_wordcloud.pdf")
 
-contents = Path('../build/preprocessed/real_news_titles.csv').read_text()
-wordcloud = WordCloud(background_color='white',
-                      width=1920,
-                      height=1080
-                      ).generate(contents)
-plt.imshow(wordcloud)
-plt.axis('off')
-plt.savefig("../build/plots/real_news_titles_wordcloud.pdf")
+
+plotWordcloud("fake_news_titles_stem","trump_silhouette.png")
+plotWordcloud("fake_news_titles_lem", "trump_silhouette.png")
+plotWordcloud("real_news_titles","")
+
