@@ -42,13 +42,13 @@ print(vectorizer.get_feature_names())
 X_train=vectorizer.transform(X_train).toarray()
 X_test=vectorizer.transform(X_test).toarray()
 print(y_train)
-X_embedded = TSNE(n_components=3).fit_transform(X_train[:2000])
+X_embedded = TSNE(n_components=3).fit_transform(X_train[:4000])
 kmeans = KMeans(n_clusters=12)
 kmeans.fit(X_embedded)
 print(kmeans.labels_)
 fig = plt.figure()
 ax = Axes3D(fig)
-for i, label in enumerate(y_train[:2000]):
+for i, label in enumerate(y_train[:4000]):
         x, y, z = X_embedded[i, :]
         ax.text(X_embedded[:, 0][i], X_embedded[:, 1][i], X_embedded[:, 2][i], label)
 ax.scatter3D(X_embedded[:, 0], X_embedded[:, 1], X_embedded[:, 2],
@@ -67,7 +67,7 @@ ax.scatter3D(kmeans.cluster_centers_[:, 0],
 #            kmeans.cluster_centers_[:, 1], color='black')
 
 model = Sequential()
-model.add(Dense(units=11, activation='relu', input_dim=dim))
+model.add(Dense(units=101, activation='relu', input_dim=dim))
 model.add(Dense(units=1, activation='sigmoid'))
 model.compile(loss='binary_crossentropy',
               optimizer='sgd',
