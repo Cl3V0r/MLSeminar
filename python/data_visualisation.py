@@ -25,5 +25,5 @@ def plotWordcloud(s,t):
 
 plotWordcloud("fake_news_titles_stem","trump_silhouette.png")
 plotWordcloud("fake_news_titles_lem", "trump_silhouette.png")
-plotWordcloud("real_news_titles","")
+plotWordcloud("real_news_titles_lem","")
 

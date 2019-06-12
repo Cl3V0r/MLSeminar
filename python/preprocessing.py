@@ -27,6 +27,9 @@ def stemming(s):
 
 
 def lemmatizing(s):
+    if(type(s)!=str):
+        print(type(s)," ",s)
+        return ""  
     tokenized = tknzr.tokenize(s)
     l = []
     for word in tokenized:
@@ -38,26 +41,31 @@ def lemmatizing(s):
 
 #getting to know the dataset
 news = pd.read_csv('../data/mixed_news/news_dataset.csv')
+
 print(news.keys())
 print(news.head())
 print(news.label.unique())
 
 #extracting titles for wordcloud visualization
-titles = news.title.dropna()
-fake_titles = titles[news['label'] == 'fake']
-real_titles = titles[news['label'] == 'real']
+#titles = news.title.dropna()
+#fake_titles = titles[news['label'] == 'fake']
+#real_titles = titles[news['label'] == 'real']
+#stem_data = open('../build/preprocessed/fake_news_titles_stem.csv',"w")
+#lem_data  = open('../build/preprocessed/fake_news_titles_lem.csv', "w")
+#for t in fake_titles:
+#    stem_data.write(stemming(t)+"\n")   
+#    lem_data.write(lemmatizing(t)+"\n")    
+#stem_data.close()
+#lem_data.close()
+#lem_data = open('../build/preprocessed/real_news_titles_lem.csv', "w")
+#for t in real_titles:
+#    lem_data.write(lemmatizing(t)+"\n")
+#lem_data.close
 
-stem_data = open('../build/preprocessed/fake_news_titles_stem.csv',"w")
-lem_data  = open('../build/preprocessed/fake_news_titles_lem.csv', "w")
-
-for t in fake_titles:
-    stem_data.write(stemming(t)+"\n")   
-    lem_data.write(lemmatizing(t)+"\n")    
-stem_data.close()
-
-real_titles.to_csv('../build/preprocessed/real_news_titles.csv',
-                   index=False, sep=" ", header=False)
-
-#stemming articles
-for content in news.content:
-    pass
+#lemmatize articles
+#data = open("../build/preprocessed/labeled_content_lem.csv","w")
+#for row in news.itertuples():
+#   data.write(lemmatizing(getattr(row, "content"))+" "+getattr(row, "label")+"\n")
+#data.close()
+news['content'] = news['content'].apply(lambda x: lemmatizing(x))
+news.to_csv(path_or_buf = "../build/preprocessed/labeled_content_lem.csv")
