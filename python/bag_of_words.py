@@ -21,8 +21,7 @@ dim = 1000
 
 df = pd.read_csv("../build/preprocessed/labeled_content_lem.csv")
 df = df.dropna()
-#df["label"] = df["label"].replace("fake", 0)
-#df["label"] = df["label"].replace("real", 1)
+
 
 print(df.keys())
 print(df.head())
@@ -38,9 +37,8 @@ vectorizer = CountVectorizer(max_features=dim, ngram_range=(1, 3))
 
 vectorizer.fit(X_train)
 print(vectorizer.get_feature_names())
-X_train=vectorizer.transform(X_train)
-X_test=vectorizer.transform(X_test)
-
+X_train=vectorizer.transform(X_train).toarray()
+X_test=vectorizer.transform(X_test).toarray()
 
 model = Sequential()
 model.add(Dense(units=11, activation='relu', input_dim=dim))

@@ -72,4 +72,4 @@ news['content'] = news['content'].dropna()
 news["label"]=news["label"].replace("fake",0)
 news["label"] = news["label"].replace("real", 1)
 
-news.to_csv(path_or_buf = "../build/preprocessed/labeled_content_lem4.csv",index=False)
+news.to_csv(path_or_buf = "../build/preprocessed/labeled_content_lem.csv",index=False)
