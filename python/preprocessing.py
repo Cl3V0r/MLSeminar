@@ -29,7 +29,7 @@ def stemming(s):
 def lemmatizing(s):
     if(type(s)!=str):
         print(type(s)," ",s)
-        return ""  
+        return "nan"  
     tokenized = tknzr.tokenize(s)
     l = []
     for word in tokenized:
@@ -41,7 +41,7 @@ def lemmatizing(s):
 
 #getting to know the dataset
 news = pd.read_csv('../data/mixed_news/news_dataset.csv')
-news=news.head()
+
 print(news.keys())
 print(news.head())
 print(news.label.unique())
@@ -68,4 +68,8 @@ lem_data.close
 #   data.write(lemmatizing(getattr(row, "content"))+" "+getattr(row, "label")+"\n")
 #data.close()
 news['content'] = news['content'].apply(lambda x: lemmatizing(x))
-news.to_csv(path_or_buf = "../build/preprocessed/labeled_content_lem.csv",index=False)
+news['content'] = news['content'].dropna()
+news["label"]=news["label"].replace("fake",0)
+news["label"] = news["label"].replace("real", 1)
+
+news.to_csv(path_or_buf = "../build/preprocessed/labeled_content_lem4.csv",index=False)

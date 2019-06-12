@@ -108,3 +108,6 @@ venv.bak/
 
 #binary
 *.bin.gz
+
+#keras
+*.hdf5
