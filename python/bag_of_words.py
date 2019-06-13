@@ -1,6 +1,8 @@
 import pandas as pd
+import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
 from sklearn.cluster import KMeans
 from sklearn.manifold import TSNE
 from keras.models import Sequential
@@ -20,11 +22,11 @@ def plot_history(network_history):
 
 
 seed=42
-dim = 1000
+dim = 100
 
 df = pd.read_csv("../build/preprocessed/labeled_content_lem.csv")
 df = df.dropna()
-
+#df = df[:1000]
 print(df.keys())
 print(df.head())
 print(df.label.unique())
@@ -66,6 +68,9 @@ ax.scatter3D(kmeans.cluster_centers_[:, 0],
 #plt.scatter(kmeans.cluster_centers_[:, 0],
 #            kmeans.cluster_centers_[:, 1], color='black')
 
+plt.savefig("../build/plots/tSNE_bow_knn.pdf")
+plt.clf()
+
 model = Sequential()
 model.add(Dense(units=101, activation='relu', input_dim=dim))
 model.add(Dense(units=1, activation='sigmoid'))
@@ -75,14 +80,15 @@ model.compile(loss='binary_crossentropy',
 model.summary()
 
 filepath='../model/best_bow_nn.hdf5'
-checkpoint = ModelCheckpoint(
-    filepath, monitor='acc', verbose=1, save_best_only=True, mode='max')
+checkpoint = ModelCheckpoint(filepath, monitor='acc', verbose=1, save_best_only=True, mode='max')
 
 history = model.fit(X_train, y_train, validation_split=0.3,
-                    epochs=5000, batch_size=8, callbacks=[checkpoint, TensorBoard(log_dir='../build/graph',
+                    epochs=100, batch_size=8, callbacks=[checkpoint, TensorBoard(log_dir='../build/graph',
                                                                                  histogram_freq=0, write_graph=False)])
 print(history.history.keys())
 plot_history(history)
-plt.savefig("../build/plots/tSNE_bow_knn.pdf")
+plt.savefig("../build/plots/history_bow_knn.pdf")
 
-
+y_pred = model.predict(X_test, batch_size=64, verbose=1)
+y_pred_bool = np.argmax(y_pred, axis=1)
+print(classification_report(y_test, y_pred_bool))

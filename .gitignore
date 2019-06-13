@@ -111,3 +111,6 @@ venv.bak/
 
 #keras
 *.hdf5
+
+#vscode
+*.vscode
