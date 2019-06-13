@@ -2,15 +2,10 @@ import pandas as pd
 import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report
 from sklearn.cluster import KMeans
 from sklearn.manifold import TSNE
-from keras.models import Sequential
-from keras.layers import Dense
-from keras.callbacks import ModelCheckpoint
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-from keras.callbacks import TensorBoard
 
 def plot_history(network_history):
     plt.figure()
@@ -20,36 +15,45 @@ def plot_history(network_history):
     plt.plot(network_history.history['val_loss'])
     plt.legend(['Training', 'Validation'])
 
-
 seed=42
-dim = 100
-
+dim = 1000
+#get lemmatized dataset (needs preprocessing.py)
 df = pd.read_csv("../build/preprocessed/labeled_content_lem.csv")
 df = df.dropna()
-#df = df[:1000]
+#df=df[:100]
+#inspect dataset
 print(df.keys())
 print(df.head())
 print(df.label.unique())
-
+#get newstext with label: real or faje
 X = df["content"]
 y = df["label"]
-
+#split dataset into training and validation dataset
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.3, random_state=seed, shuffle=True ,stratify=y)
-
+#actual bag of words model, with most common words (n=dim) of trainigsdataset
 vectorizer = CountVectorizer(max_features=dim, ngram_range=(1, 3))
-
 vectorizer.fit(X_train)
-print(vectorizer.get_feature_names())
+
+with open("../build/preprocessed/bow_feature_names.txt","w") as file:
+    for vec in vectorizer.get_feature_names():
+        file.write(vec+"\n")
+
 X_train=vectorizer.transform(X_train).toarray()
 X_test=vectorizer.transform(X_test).toarray()
-print(y_train)
+
+np.savetxt("../build/preprocessed/bow_X_train.txt",X_train)
+np.savetxt("../build/preprocessed/bow_y_train.txt",y_train)
+np.savetxt("../build/preprocessed/bow_X_test.txt",X_test)
+np.savetxt("../build/preprocessed/bow_y_test.txt",y_test)
+
+#visualize data. use tSNE for a 3 dim representation. try to separate 3dim data with kmeans 
 X_embedded = TSNE(n_components=3).fit_transform(X_train[:4000])
 kmeans = KMeans(n_clusters=12)
 kmeans.fit(X_embedded)
 print(kmeans.labels_)
 fig = plt.figure()
-ax = Axes3D(fig)
+ax = fig.add_subplot(111, projection='3d')
 for i, label in enumerate(y_train[:4000]):
         x, y, z = X_embedded[i, :]
         ax.text(X_embedded[:, 0][i], X_embedded[:, 1][i], X_embedded[:, 2][i], label)
@@ -57,7 +61,14 @@ ax.scatter3D(X_embedded[:, 0], X_embedded[:, 1], X_embedded[:, 2],
             c=kmeans.labels_, cmap='rainbow')
 ax.scatter3D(kmeans.cluster_centers_[:, 0],
             kmeans.cluster_centers_[:, 1], kmeans.cluster_centers_[:, 2], color='black')
-# display scatter plot
+
+ax.set_xlim(-500, 500)
+ax.set_ylim(-500, 500)
+ax.set_zlim(-500, 500)
+plt.savefig("../build/plots/tSNE_bow_knn.pdf")
+plt.clf()
+
+# display 2D scatter plot
 #for i, label in enumerate(y_train[:500]):
 #        x, y = X_embedded[i, :]
 #        plt.annotate(label, xy=(x, y), xytext=(
@@ -67,28 +78,3 @@ ax.scatter3D(kmeans.cluster_centers_[:, 0],
 #            c=kmeans.labels_, cmap='rainbow')
 #plt.scatter(kmeans.cluster_centers_[:, 0],
 #            kmeans.cluster_centers_[:, 1], color='black')
-
-plt.savefig("../build/plots/tSNE_bow_knn.pdf")
-plt.clf()
-
-model = Sequential()
-model.add(Dense(units=101, activation='relu', input_dim=dim))
-model.add(Dense(units=1, activation='sigmoid'))
-model.compile(loss='binary_crossentropy',
-              optimizer='sgd',
-              metrics=['accuracy'])
-model.summary()
-
-filepath='../model/best_bow_nn.hdf5'
-checkpoint = ModelCheckpoint(filepath, monitor='acc', verbose=1, save_best_only=True, mode='max')
-
-history = model.fit(X_train, y_train, validation_split=0.3,
-                    epochs=100, batch_size=8, callbacks=[checkpoint, TensorBoard(log_dir='../build/graph',
-                                                                                 histogram_freq=0, write_graph=False)])
-print(history.history.keys())
-plot_history(history)
-plt.savefig("../build/plots/history_bow_knn.pdf")
-
-y_pred = model.predict(X_test, batch_size=64, verbose=1)
-y_pred_bool = np.argmax(y_pred, axis=1)
-print(classification_report(y_test, y_pred_bool))
