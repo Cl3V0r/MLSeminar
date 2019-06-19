@@ -16,15 +16,10 @@ def plot_history(network_history):
     plt.legend(['Training', 'Validation'])
 
 seed=42
-dim = 1000
+dim = 5000
 #get lemmatized dataset (needs preprocessing.py)
 df = pd.read_csv("../build/preprocessed/labeled_content_lem.csv")
 df = df.dropna()
-#df=df[:100]
-#inspect dataset
-print(df.keys())
-print(df.head())
-print(df.label.unique())
 #get newstext with label: real or faje
 X = df["content"]
 y = df["label"]
@@ -32,7 +27,7 @@ y = df["label"]
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.3, random_state=seed, shuffle=True ,stratify=y)
 #actual bag of words model, with most common words (n=dim) of trainigsdataset
-vectorizer = CountVectorizer(max_features=dim, ngram_range=(1, 3))
+vectorizer = CountVectorizer(max_features=dim, ngram_range=(2, 5))
 vectorizer.fit(X_train)
 
 with open("../build/preprocessed/bow_feature_names.txt","w") as file:
@@ -49,7 +44,7 @@ np.savetxt("../build/preprocessed/bow_y_test.txt",y_test)
 
 #visualize data. use tSNE for a 3 dim representation. try to separate 3dim data with kmeans 
 X_embedded = TSNE(n_components=3).fit_transform(X_train[:4000])
-kmeans = KMeans(n_clusters=12)
+kmeans = KMeans(n_clusters=2)
 kmeans.fit(X_embedded)
 print(kmeans.labels_)
 fig = plt.figure()
@@ -57,14 +52,12 @@ ax = fig.add_subplot(111, projection='3d')
 for i, label in enumerate(y_train[:4000]):
         x, y, z = X_embedded[i, :]
         ax.text(X_embedded[:, 0][i], X_embedded[:, 1][i], X_embedded[:, 2][i], label)
-ax.scatter3D(X_embedded[:, 0], X_embedded[:, 1], X_embedded[:, 2],
-            c=kmeans.labels_, cmap='rainbow')
-ax.scatter3D(kmeans.cluster_centers_[:, 0],
-            kmeans.cluster_centers_[:, 1], kmeans.cluster_centers_[:, 2], color='black')
+ax.scatter3D(X_embedded[:, 0], X_embedded[:, 1], X_embedded[:, 2], c=kmeans.labels_, cmap='rainbow')
+ax.scatter3D(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:, 1], kmeans.cluster_centers_[:, 2], color='black')
 
-ax.set_xlim(-500, 500)
-ax.set_ylim(-500, 500)
-ax.set_zlim(-500, 500)
+ax.set_xlim(-70, 70)
+ax.set_ylim(-70, 70)
+ax.set_zlim(-70, 70)
 plt.savefig("../build/plots/tSNE_bow_knn.pdf")
 plt.clf()
 

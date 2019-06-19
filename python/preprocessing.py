@@ -26,15 +26,16 @@ def stemming(s):
     return token_text
 
 
-def lemmatizing(s):
+def lemmatizing(s,stop):
     if(type(s)!=str):
         print(type(s)," ",s)
         return "nan"  
     tokenized = tknzr.tokenize(s)
     l = []
     for word in tokenized:
-        if word in stopwords.words('english'):
-            tokenized.remove(word)
+        if(stop==True):
+            if word in stopwords.words('english'):
+                tokenized.remove(word)
         word = lemmatizer.lemmatize(word)
     token_text = " ".join(tokenized)
     return token_text
@@ -54,12 +55,12 @@ stem_data = open('../build/preprocessed/fake_news_titles_stem.csv',"w")
 lem_data  = open('../build/preprocessed/fake_news_titles_lem.csv', "w")
 for t in fake_titles:
     stem_data.write(stemming(t)+"\n")   
-    lem_data.write(lemmatizing(t)+"\n")    
+    lem_data.write(lemmatizing(t,True)+"\n")    
 stem_data.close()
 lem_data.close()
 lem_data = open('../build/preprocessed/real_news_titles_lem.csv', "w")
 for t in real_titles:
-    lem_data.write(lemmatizing(t)+"\n")
+    lem_data.write(lemmatizing(t,True)+"\n")
 lem_data.close
 
 #lemmatize articles
@@ -67,9 +68,10 @@ lem_data.close
 #for row in news.itertuples():
 #   data.write(lemmatizing(getattr(row, "content"))+" "+getattr(row, "label")+"\n")
 #data.close()
-news['content'] = news['content'].apply(lambda x: lemmatizing(x))
 news['content'] = news['content'].dropna()
-news["label"]=news["label"].replace("fake",0)
-news["label"] = news["label"].replace("real", 1)
-
-news.to_csv(path_or_buf = "../build/preprocessed/labeled_content_lem.csv",index=False)
+news["label"]   = news["label"].replace("fake",0)
+news["label"]   = news["label"].replace("real", 1)
+news['content'] = news['content'].apply(lambda x: lemmatizing(x, False))
+news.to_csv(path_or_buf="../build/preprocessed/labeled_content_lem.csv", index=False)
+news['content'] = news['content'].apply(lambda x: lemmatizing(x,True))
+news.to_csv(path_or_buf = "../build/preprocessed/labeled_content_lem_stop.csv",index=False)
