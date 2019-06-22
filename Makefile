@@ -8,6 +8,7 @@ build:
 	mkdir build/plots
 	mkdir build/preprocessed
 	mkdir build/graph
+	mkdir model
 
 clean:
 	rm -rf build
