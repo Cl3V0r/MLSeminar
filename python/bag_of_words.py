@@ -16,7 +16,7 @@ def plot_history(network_history):
     plt.legend(['Training', 'Validation'])
 
 seed=42
-dim = 100
+dim = 1000
 #get lemmatized dataset (needs preprocessing.py)
 df = pd.read_csv("../build/preprocessed/labeled_content_lem_stop.csv")
 df = df.dropna()
@@ -26,10 +26,9 @@ X = df["content"]
 y = df["label"]
 
 #split dataset into training and validation dataset
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.3, random_state=seed, shuffle=True ,stratify=y)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=seed, shuffle=True) #,stratify=y)
 #actual bag of words model, with most common words (n=dim) of trainigsdataset
-vectorizer = CountVectorizer(max_features=dim, ngram_range=(1, 5))
+vectorizer = CountVectorizer(max_features=dim, ngram_range=(1,1))
 vectorizer.fit(X_train)
 
 with open("../build/preprocessed/bow_feature_names.txt","w") as file:
