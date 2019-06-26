@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from keras.models import Sequential
-from keras.layers import Dense, Dropout
+from keras.layers import Dense, Dropout, LeakyReLU
 from keras.callbacks import TensorBoard, ModelCheckpoint
 from keras.models import load_model
 from sklearn.metrics import confusion_matrix, classification_report
@@ -26,8 +26,11 @@ y_train = np.genfromtxt("../build/preprocessed/bow_y_train.txt", unpack=True)
 X_test  = np.genfromtxt("../build/preprocessed/bow_X_test.txt")
 y_test  = np.genfromtxt("../build/preprocessed/bow_y_test.txt", unpack=True)
 
+LR = LeakyReLU()
+LR.__name__ = 'relu'
+
 model = Sequential()
-model.add(Dense(units=dim*10, activation='relu', input_dim=dim))
+model.add(Dense(units=dim*10, activation=LR, input_dim=dim))
 #model.add(Dense(units=1000, activation='relu'))
 model.add(Dropout(rate=rate,seed=seed))
 model.add(Dense(units=10, activation='relu'))
@@ -42,7 +45,7 @@ checkpoint = ModelCheckpoint(
     filepath, monitor='val_loss', verbose=1, save_best_only=True)
 
 history = model.fit(X_train, y_train, validation_split=0.3,
-                    epochs=100,batch_size=8, callbacks=[checkpoint, TensorBoard(log_dir='../build/graph',
+                    epochs=10,batch_size=8, callbacks=[checkpoint, TensorBoard(log_dir='../build/graph',
                                                                                 histogram_freq=50, write_graph=True)])
 print(history.history.keys())
 plot_history(history)
