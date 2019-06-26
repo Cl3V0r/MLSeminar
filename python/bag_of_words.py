@@ -7,14 +7,6 @@ from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-def plot_history(network_history):
-    plt.figure()
-    plt.xlabel('Epochs')
-    plt.ylabel('Loss')
-    plt.plot(network_history.history['loss'])
-    plt.plot(network_history.history['val_loss'])
-    plt.legend(['Training', 'Validation'])
-
 seed=42
 dim = 1000
 #get lemmatized dataset (needs preprocessing.py)
