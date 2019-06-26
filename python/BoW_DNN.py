@@ -41,20 +41,20 @@ model.compile(loss='binary_crossentropy',
 model.summary()
 
 filepath = '../model/best_bow_nn.hdf5'
-checkpoint = ModelCheckpoint(
-    filepath, monitor='val_loss', verbose=1, save_best_only=True)
+checkpoint = ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True)
 
-history = model.fit(X_train, y_train, validation_split=0.3,
-                    epochs=10,batch_size=8, callbacks=[checkpoint, TensorBoard(log_dir='../build/graph',
-                                                                                histogram_freq=50, write_graph=True)])
-print(history.history.keys())
-plot_history(history)
+#history = model.fit(X_train, y_train, validation_split=0.3,
+#                    epochs=10,batch_size=8, callbacks=[checkpoint, TensorBoard(log_dir='../build/graph',
+#                                                                                histogram_freq=50, write_graph=True)])
+#print(history.history.keys())
+#plot_history(history)
 
 best_model = load_model('../model/best_bow_nn.hdf5')
 y_pred = best_model.predict(X_test, batch_size=64, verbose=1)
-y_pred_bool = np.argmax(y_pred, axis=1)
-print(classification_report(y_test, y_pred))
-print(confusion_matrix(y_test, y_pred,
+y_pred_bool = np.round(y_pred)
+print(y_pred,y_pred_bool)
+print(classification_report(y_test, y_pred_bool))
+print(confusion_matrix(y_test, y_pred_bool,
                        labels=[0,1]))
 plt.imshow(confusion_matrix(y_test, y_pred_bool,
                             labels=[0,1]))

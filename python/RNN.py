@@ -41,7 +41,7 @@ def evaluate(X_test, Y_test, X_train, Y_train, model):
     print("Precision: %.2f" % precision_score(Y_test, Y_cls, average='weighted'))
     print("Recall: %.2f" % recall_score(Y_test, Y_cls, average='weighted'))
     print('Classification Report:\n', classification_report(Y_test, Y_cls) )
-    print(confusion_matrix(y_val, y_pred_bool, labels=[0, 1]))
+    print(confusion_matrix(y_val, y_pred, labels=[0, 1]))
     ## Plot 0 probability including overtraining test
     plt.figure(figsize=(8, 8))
     label = 1
@@ -65,9 +65,6 @@ def evaluate(X_test, Y_test, X_train, Y_train, model):
 
 df = pd.read_csv("../build/preprocessed/labeled_content_lem_stop.csv")
 df = df.dropna()
-#df = df.iloc[np.arange(2000),:]
-#df=df[:1000]
-#get newstext with label: real or fake
 X = df["content"]
 y = df["label"]
 print(np.count_nonzero(y==1),np.count_nonzero(y==0),len(y))
@@ -99,9 +96,6 @@ checkpoint = ModelCheckpoint(
 embedding_vecor_length = 32
 model = Sequential()
 model.add(Embedding(top_words, embedding_vecor_length,input_length=max_text_length))
-#model.add(Dropout(0.4))
-#model.add(SimpleRNN(128))
-#model.add(Dropout(0.4))
 model.add(Conv1D(filters=32, kernel_size=3, padding='same', activation='relu'))
 model.add(MaxPooling1D(pool_size=2))
 model.add(LSTM(128, dropout=0.4, recurrent_dropout=0.4))
@@ -116,9 +110,9 @@ best_model = load_model('../model/best_rnn.hdf5')
 evaluate(X_test,y_test,X_train,Y_train,best_model)
 
 y_pred = best_model.predict(X_test, batch_size=8, verbose=1)
-#y_pred_bool = np.argmax(y_pred, axis=1)
+y_pred_bool = np.round(y_pred)
 
-plt.imshow(confusion_matrix(y_test, y_pred,
+plt.imshow(confusion_matrix(y_test, y_pred_bool,
                             labels=[0, 1]))
 plt.tight_layout()
 plt.colorbar()
@@ -127,9 +121,8 @@ plt.yticks(range(2), ["fake", "real"])
 plt.savefig("../build/plots/cnfsn_mtx_rnn_test.pdf")
 plt.clf()
 y_pred = best_model.predict(X_val, batch_size=8, verbose=1)
-#y_pred_bool = np.argmax(y_pred, axis=1)
-print(classification_report(y_val, y_pred))
-print(confusion_matrix(y_val, y_pred,labels=[0, 1]))
+print(classification_report(y_val, y_pred_bool))
+print(confusion_matrix(y_val, y_pred_bool,labels=[0, 1]))
 plt.imshow(confusion_matrix(y_val, y_pred_bool,labels=[0, 1]))
 plt.tight_layout()
 plt.colorbar()
