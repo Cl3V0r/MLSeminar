@@ -53,8 +53,8 @@ plot_history(history)
 best_model = load_model('../model/best_bow_nn.hdf5')
 y_pred = best_model.predict(X_test, batch_size=64, verbose=1)
 y_pred_bool = np.argmax(y_pred, axis=1)
-print(classification_report(y_test, y_pred_bool))
-print(confusion_matrix(y_test, y_pred_bool,
+print(classification_report(y_test, y_pred))
+print(confusion_matrix(y_test, y_pred,
                        labels=[0,1]))
 plt.imshow(confusion_matrix(y_test, y_pred_bool,
                             labels=[0,1]))
