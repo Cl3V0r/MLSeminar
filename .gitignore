@@ -6,6 +6,12 @@ __pycache__/
 # C extensions
 *.so
 
+# Bert Folders
+python/BERT
+python/tmp_data
+python/encoded_data
+data/
+
 # Distribution / packaging
 .Python
 build/
