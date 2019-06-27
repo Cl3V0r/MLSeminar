@@ -44,7 +44,7 @@ plt.savefig("../build/plots/postillonWordcloud.pdf")
 plt.clf()
 
 X_embedded = TSNE(n_components=2).fit_transform(X)
-kmeans = KMeans(n_clusters=8)
+kmeans = KMeans(n_clusters=12)
 kmeans.fit(X_embedded)
 #print(kmeans.labels_)
 plt.scatter(X_embedded[:, 0], X_embedded[:, 1], c=kmeans.labels_, cmap='rainbow')

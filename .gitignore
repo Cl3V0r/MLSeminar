@@ -111,3 +111,12 @@ venv.bak/
 
 #json
 *.json
+
+#binary
+*.bin.gz
+
+#keras
+*.hdf5
+
+#vscode
+*.vscode
