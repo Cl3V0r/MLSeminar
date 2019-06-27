@@ -101,10 +101,10 @@ model.add(MaxPooling1D(pool_size=2))
 model.add(LSTM(128, dropout=0.4, recurrent_dropout=0.4))
 model.add(Dense(1, activation='sigmoid'))
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-#history = model.fit(X_train, Y_train, validation_data=(X_val,y_val),
-#                    epochs=4, batch_size=8, callbacks=[checkpoint,
-#                     TensorBoard(log_dir='../build/graph', histogram_freq=50, write_graph=True)])
-#plot_history(history)
+history = model.fit(X_train, Y_train, validation_data=(X_val,y_val),
+                    epochs=100, batch_size=8, callbacks=[checkpoint,
+                     TensorBoard(log_dir='../build/graph', histogram_freq=50, write_graph=True)])
+plot_history(history)
 
 best_model = load_model('../model/best_rnn.hdf5')
 evaluate(X_test,y_test,X_train,Y_train,best_model)
