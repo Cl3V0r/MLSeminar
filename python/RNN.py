@@ -64,6 +64,7 @@ def evaluate(X_test, Y_test, X_train, Y_train, model):
     plt.clf()
 
 
+
 df = pd.read_csv("../build/preprocessed/labeled_content_lem_stop.csv")
 df = df.dropna()
 X = df["content"]
@@ -102,10 +103,10 @@ model.add(MaxPooling1D(pool_size=2))
 model.add(LSTM(128, dropout=0.4, recurrent_dropout=0.4))
 model.add(Dense(1, activation='sigmoid'))
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-history = model.fit(X_train, Y_train, validation_data=(X_val,y_val),
-                    epochs=100, batch_size=8, callbacks=[checkpoint,
-                     TensorBoard(log_dir='../build/graph', histogram_freq=50, write_graph=True)])
-plot_history(history)
+#history = model.fit(X_train, Y_train, validation_data=(X_val,y_val),
+#                    epochs=100, batch_size=8, callbacks=[checkpoint,
+#                     TensorBoard(log_dir='../build/graph', histogram_freq=50, write_graph=True)])
+#plot_history(history)
 
 best_model = load_model('../model/best_rnn.hdf5')
 evaluate(X_test,y_test,X_train,Y_train,best_model)
@@ -131,3 +132,24 @@ plt.xticks(range(2), ["fake", "real"])
 plt.yticks(range(2), ["fake", "real"])
 plt.savefig("../build/plots/cnfsn_mtx_rnn_val.pdf")
 plt.clf()
+
+fpr = dict()
+tpr = dict()
+roc_auc = dict()
+fpr, tpr, _ = roc_curve(y_test, y_pred)
+roc_auc = auc(fpr, tpr)
+
+plt.figure()
+lw = 2
+plt.plot(fpr, tpr, color='darkorange',
+         lw=lw, label='ROC curve (area = %0.2f)' % roc_auc)
+plt.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
+plt.xlim([0.0, 1.0])
+plt.ylim([0.0, 1.05])
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Receiver operating characteristic example')
+plt.legend(loc="lower right")
+#plt.show()
+plt.savefig("../build/plots/bow/RNN_bow_roc.pdf")
+plt.close()
