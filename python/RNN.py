@@ -41,7 +41,7 @@ def evaluate(X_test, Y_test, X_train, Y_train, model):
     print("Precision: %.2f" % precision_score(Y_test, Y_cls, average='weighted'))
     print("Recall: %.2f" % recall_score(Y_test, Y_cls, average='weighted'))
     print('Classification Report:\n', classification_report(Y_test, Y_cls) )
-    print(confusion_matrix(y_val, y_pred, labels=[0, 1]))
+    print(confusion_matrix(Y_test, Y_cls, labels=[0, 1]))
     ## Plot 0 probability including overtraining test
     plt.figure(figsize=(8, 8))
     label = 1
@@ -61,6 +61,7 @@ def evaluate(X_test, Y_test, X_train, Y_train, model):
     plt.xlabel('Probability of being real news')
     plt.ylabel('Number of entries')
     plt.savefig("../build/plots/hist_rnn_test.pdf")
+    plt.clf()
 
 
 df = pd.read_csv("../build/preprocessed/labeled_content_lem_stop.csv")
@@ -112,8 +113,7 @@ evaluate(X_test,y_test,X_train,Y_train,best_model)
 y_pred = best_model.predict(X_test, batch_size=8, verbose=1)
 y_pred_bool = np.round(y_pred)
 
-plt.imshow(confusion_matrix(y_test, y_pred_bool,
-                            labels=[0, 1]))
+plt.imshow(confusion_matrix(y_test, y_pred_bool,                            labels=[0, 1]))
 plt.tight_layout()
 plt.colorbar()
 plt.xticks(range(2), ["fake", "real"])
@@ -121,6 +121,7 @@ plt.yticks(range(2), ["fake", "real"])
 plt.savefig("../build/plots/cnfsn_mtx_rnn_test.pdf")
 plt.clf()
 y_pred = best_model.predict(X_val, batch_size=8, verbose=1)
+y_pred_bool=np.round(y_pred)
 print(classification_report(y_val, y_pred_bool))
 print(confusion_matrix(y_val, y_pred_bool,labels=[0, 1]))
 plt.imshow(confusion_matrix(y_val, y_pred_bool,labels=[0, 1]))
@@ -129,3 +130,4 @@ plt.colorbar()
 plt.xticks(range(2), ["fake", "real"])
 plt.yticks(range(2), ["fake", "real"])
 plt.savefig("../build/plots/cnfsn_mtx_rnn_val.pdf")
+plt.clf()
