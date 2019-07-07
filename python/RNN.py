@@ -8,7 +8,7 @@ from keras.preprocessing.sequence import pad_sequences
 from keras.layers.embeddings import Embedding
 from keras.callbacks import TensorBoard, ModelCheckpoint
 from keras.models import load_model
-from sklearn.metrics import accuracy_score, precision_score, recall_score, confusion_matrix, classification_report
+from sklearn.metrics import accuracy_score, precision_score, recall_score, confusion_matrix, classification_report, roc_curve, auc
 from sklearn.model_selection import train_test_split
 
 def plot_history(network_history):
@@ -114,24 +114,24 @@ evaluate(X_test,y_test,X_train,Y_train,best_model)
 y_pred = best_model.predict(X_test, batch_size=8, verbose=1)
 y_pred_bool = best_model.predict_classes(X_test, batch_size=8, verbose=1)
 
-plt.imshow(confusion_matrix(y_test, y_pred_bool,                            labels=[0, 1]))
+plt.imshow(confusion_matrix(y_test, y_pred_bool,labels=[0, 1]))
 plt.tight_layout()
 plt.colorbar()
 plt.xticks(range(2), ["fake", "real"])
 plt.yticks(range(2), ["fake", "real"])
 plt.savefig("../build/plots/cnfsn_mtx_rnn_test.pdf")
 plt.clf()
-y_pred = best_model.predict(X_val, batch_size=8, verbose=1)
-y_pred_bool = best_model.predict_classes(X_val, batch_size=8, verbose=1)
-print(classification_report(y_val, y_pred_bool))
-print(confusion_matrix(y_val, y_pred_bool,labels=[0, 1]))
-plt.imshow(confusion_matrix(y_val, y_pred_bool,labels=[0, 1]))
-plt.tight_layout()
-plt.colorbar()
-plt.xticks(range(2), ["fake", "real"])
-plt.yticks(range(2), ["fake", "real"])
-plt.savefig("../build/plots/cnfsn_mtx_rnn_val.pdf")
-plt.clf()
+#y_pred = best_model.predict(X_val, batch_size=8, verbose=1)
+#y_pred_bool = best_model.predict_classes(X_val, batch_size=8, verbose=1)
+#print(classification_report(y_val, y_pred_bool))
+#print(confusion_matrix(y_val, y_pred_bool,labels=[0, 1]))
+#plt.imshow(confusion_matrix(y_val, y_pred_bool,labels=[0, 1]))
+#plt.tight_layout()
+#plt.colorbar()
+#plt.xticks(range(2), ["fake", "real"])
+#plt.yticks(range(2), ["fake", "real"])
+#plt.savefig("../build/plots/cnfsn_mtx_rnn_val.pdf")
+#plt.clf()
 
 fpr = dict()
 tpr = dict()
