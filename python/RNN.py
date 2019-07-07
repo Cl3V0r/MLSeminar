@@ -67,6 +67,7 @@ def evaluate(X_test, Y_test, X_train, Y_train, model):
 
 df = pd.read_csv("../build/preprocessed/labeled_content_lem_stop.csv")
 df = df.dropna()
+df = df.iloc[0:100]
 X = df["content"]
 y = df["label"]
 print(np.count_nonzero(y==1),np.count_nonzero(y==0),len(y))
@@ -153,3 +154,21 @@ plt.legend(loc="lower right")
 #plt.show()
 plt.savefig("../build/plots/bow/RNN_bow_roc.pdf")
 plt.close()
+
+X_false = []
+for i in range(len(y_test)):
+    if(y_test.iloc[i]!=y_pred_bool[i]):
+       X_false.append(X.iloc[i])
+    if(len(X_false)==3):
+        break   
+
+reverse_word_map = dict(map(reversed, tokenizer.word_index.items()))
+
+def sequence_to_text(list_of_indices):
+    words = [reverse_word_map.get(letter) for letter in list_of_indices]
+    return(words)
+
+false_texts = list(map(sequence_to_text, X_test))
+for f in false_texts:
+    f=list(filter(None,f))
+    print(' '.join(f))    
