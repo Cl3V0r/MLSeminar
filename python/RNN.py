@@ -67,7 +67,7 @@ def evaluate(X_test, Y_test, X_train, Y_train, model):
 
 df = pd.read_csv("../build/preprocessed/labeled_content_lem_stop.csv")
 df = df.dropna()
-df = df.iloc[0:800]
+#df = df.iloc[0:800]
 X = df["content"]
 y = df["label"]
 print(np.count_nonzero(y==1),np.count_nonzero(y==0),len(y))

@@ -1,9 +1,15 @@
+
+#!usr/bin/env python
+#coding:utf8
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 from pathlib import Path
 import numpy as np
 from PIL import Image
 from PIL import ImageFilter
+from keras.utils import plot_model
+from ann_visualizer.visualize import ann_viz
+from keras.models import load_model
 
 def plotWordcloud(s,t):
     if(t!=""):
@@ -26,7 +32,7 @@ def plotWordcloud(s,t):
 #Visualierung der Zeitungsueberschriften
 plotWordcloud("fake_news_titles_stem","trump_silhouette.png")
 plotWordcloud("fake_news_titles_lem", "trump_silhouette.png")
-plotWordcloud("real_news_titles_lem","statue_of_liberty.png")
+#plotWordcloud("real_news_titles_lem","statue_of_liberty.png")
 #falsch klassifizierte RNN-Texte
 plotWordcloud("false_classified_rnn","")
 
@@ -80,3 +86,9 @@ plt.legend()
 plt.tight_layout()
 plt.savefig("../build/plots/comparisonX_fake_real.pdf")
 plt.clf()
+
+model = load_model('../model/best_Hyperopt_NN_bow_regularization.hdf5')
+plot_model(model, to_file='../build/plots/opt_model_bow.pdf',
+           show_shapes=True, show_layer_names=True)
+
+ann_viz(model, title="BoW-DNN",filename="../build/plots/bow_dnn_graph.gv")
