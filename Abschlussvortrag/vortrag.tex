@@ -98,22 +98,128 @@
   \end{frame}
 
   \begin{frame}
-    \frametitle{Modell}
+    \frametitle{Methode und Modell}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Training}
+    \begin{columns}
+      \column{0.5\textwidth}
+      \begin{figure}
+          \includegraphics[width=\textwidth]{pictures/bow/history_bow_best.pdf}
+          \caption{}
+          \label{}
+      \end{figure}
+      
+      \column{0.5\textwidth}
+      \begin{figure}
+          \includegraphics[width=\textwidth]{pictures/bow/prob_bow_best_nn.pdf}
+          \caption{}
+          \label{}
+      \end{figure}
+      
+    \end{columns}
   \end{frame}
 
   \begin{frame}
     \frametitle{Performance}
+    \begin{columns}
+      \column{0.5\textwidth}
+      \begin{figure}
+          \includegraphics[width=\textwidth]{pictures/bow/cnfsn_mtx_bow_best_nn.pdf}
+          \caption{}
+          \label{}
+      \end{figure}
+
+      \column{0.5\textwidth}
+      \begin{figure}
+          \includegraphics[width=\textwidth]{pictures/bow/roc_Hyperopt_bow_best_nn.pdf}
+          \caption{}
+          \label{}
+      \end{figure}
+    \end{columns}
   \end{frame}
 
   \begin{frame}
-    \frametitle{Interpretation}
+    \frametitle{Interpretation der Confusion Matrix}
+    \begin{figure}
+      \includegraphics[width=0.6\textwidth]{pictures/bow/cnfn_wordcloud.pdf}
+      \caption{}
+      \label{}
+    \end{figure}
   \end{frame}
 
   \begin{frame}
     \frametitle{Vergleichsmethode}
+    \begin{figure}
+      \includegraphics[width=0.7\textwidth]{pictures/bow/roc_comparison.pdf}
+      \caption{}
+      \label{}
+    \end{figure}
   \end{frame}
 
   \begin{frame}
-    \printbibliography
+    \vfill
+    \centering
+    \begin{beamercolorbox}[sep=8pt,center,shadow=false,rounded=true]{title}
+      \huge{\textbf{Vielen Dank für Ihre Aufmerksamkeit}}
+    \end{beamercolorbox}
+  \end{frame}
+
+\section{Back Up Folien}
+
+  \begin{frame}
+    \frametitle{Wordclouds}
+    \begin{columns}
+      \column{0.5\textwidth}
+      \begin{figure}
+          \includegraphics[width=\textwidth]{pictures/fake_wordcloud.pdf}
+          \caption{Fake News}
+          \label{}
+      \end{figure}
+
+      \column{0.5\textwidth}
+      \begin{figure}
+          \includegraphics[width=\textwidth]{pictures/real_wordcloud.pdf}
+          \caption{Real News}
+          \label{}
+      \end{figure}
+    \end{columns}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Interpretation der Gewichte}
+    \begin{figure}
+          \includegraphics[width=0.8\textwidth]{pictures/bow/weights_wordcloud.pdf}
+          \caption{}
+          \label{}
+      \end{figure}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Performance des Random Forests}
+    \begin{columns}
+      \column{0.5\textwidth}
+      \begin{figure}
+          \includegraphics[width=\textwidth]{pictures/bow/RF/prob_bow_best_nn.pdf}
+          \caption{}
+          \label{}
+      \end{figure}
+
+      \column{0.5\textwidth}
+      \begin{figure}
+          \includegraphics[width=\textwidth]{pictures/bow/RF/cnfsn_mtx_bow_best_nn.pdf}
+          \caption{}
+          \label{}
+      \end{figure}
+    \end{columns}
+  \end{frame}
+
+  \begin{frame}
+    \begin{figure}
+        \includegraphics[width=0.7\textwidth]{pictures/bow/RF/roc_Hyperopt_bow_best_nn.pdf}
+        \caption{}
+        \label{}
+    \end{figure}
   \end{frame}
 \end{document}
