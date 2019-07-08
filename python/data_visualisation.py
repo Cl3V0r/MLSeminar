@@ -91,4 +91,4 @@ model = load_model('../model/best_Hyperopt_NN_bow_regularization.hdf5')
 plot_model(model, to_file='../build/plots/opt_model_bow.pdf',
            show_shapes=True, show_layer_names=True)
 
-ann_viz(model, title="BoW-DNN",filename="../build/plots/bow_dnn_graph.gv")
+ann_viz(model, title="BoW-DNN",filename="../build/plots/bow_dnn_graph")
