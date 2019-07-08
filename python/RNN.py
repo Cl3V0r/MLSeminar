@@ -67,7 +67,7 @@ def evaluate(X_test, Y_test, X_train, Y_train, model):
 
 df = pd.read_csv("../build/preprocessed/labeled_content_lem_stop.csv")
 df = df.dropna()
-#df = df.iloc[0:100]
+#df = df.iloc[0:800]
 X = df["content"]
 y = df["label"]
 print(np.count_nonzero(y==1),np.count_nonzero(y==0),len(y))
@@ -168,8 +168,10 @@ def sequence_to_text(list_of_indices):
     words = [reverse_word_map.get(letter) for letter in list_of_indices]
     return(words)
 
-false_texts = list(map(sequence_to_text, X_test))
-for f in false_texts:
-    print("###############################################################")
-    f=list(filter(None,f))
-    print(' '.join(f))    
+false_texts = list(map(sequence_to_text, X_false))
+
+with open("../build/preprocessed/false_classified_rnn.csv","w") as file:
+    for f in false_texts:
+        f=list(filter(None,f))
+        file.write(' '.join(f))    
+        
