@@ -8,7 +8,7 @@ from keras.preprocessing.sequence import pad_sequences
 from keras.layers.embeddings import Embedding
 from keras.callbacks import TensorBoard, ModelCheckpoint
 from keras.models import load_model
-from sklearn.metrics import accuracy_score, precision_score, recall_score, confusion_matrix, classification_report
+from sklearn.metrics import accuracy_score, precision_score, recall_score, confusion_matrix, classification_report, roc_curve, auc
 from sklearn.model_selection import train_test_split
 
 def plot_history(network_history):
@@ -67,6 +67,7 @@ def evaluate(X_test, Y_test, X_train, Y_train, model):
 
 df = pd.read_csv("../build/preprocessed/labeled_content_lem_stop.csv")
 df = df.dropna()
+#df = df.iloc[0:100]
 X = df["content"]
 y = df["label"]
 print(np.count_nonzero(y==1),np.count_nonzero(y==0),len(y))
@@ -112,26 +113,26 @@ best_model = load_model('../model/best_rnn.hdf5')
 evaluate(X_test,y_test,X_train,Y_train,best_model)
 
 y_pred = best_model.predict(X_test, batch_size=8, verbose=1)
-y_pred_bool = np.round(y_pred)
+y_pred_bool = best_model.predict_classes(X_test, batch_size=8, verbose=1)
 
-plt.imshow(confusion_matrix(y_test, y_pred_bool,                            labels=[0, 1]))
+plt.imshow(confusion_matrix(y_test, y_pred_bool,labels=[0, 1]))
 plt.tight_layout()
 plt.colorbar()
 plt.xticks(range(2), ["fake", "real"])
 plt.yticks(range(2), ["fake", "real"])
 plt.savefig("../build/plots/cnfsn_mtx_rnn_test.pdf")
 plt.clf()
-y_pred = best_model.predict(X_val, batch_size=8, verbose=1)
-y_pred_bool=np.round(y_pred)
-print(classification_report(y_val, y_pred_bool))
-print(confusion_matrix(y_val, y_pred_bool,labels=[0, 1]))
-plt.imshow(confusion_matrix(y_val, y_pred_bool,labels=[0, 1]))
-plt.tight_layout()
-plt.colorbar()
-plt.xticks(range(2), ["fake", "real"])
-plt.yticks(range(2), ["fake", "real"])
-plt.savefig("../build/plots/cnfsn_mtx_rnn_val.pdf")
-plt.clf()
+#y_pred = best_model.predict(X_val, batch_size=8, verbose=1)
+#y_pred_bool = best_model.predict_classes(X_val, batch_size=8, verbose=1)
+#print(classification_report(y_val, y_pred_bool))
+#print(confusion_matrix(y_val, y_pred_bool,labels=[0, 1]))
+#plt.imshow(confusion_matrix(y_val, y_pred_bool,labels=[0, 1]))
+#plt.tight_layout()
+#plt.colorbar()
+#plt.xticks(range(2), ["fake", "real"])
+#plt.yticks(range(2), ["fake", "real"])
+#plt.savefig("../build/plots/cnfsn_mtx_rnn_val.pdf")
+#plt.clf()
 
 fpr = dict()
 tpr = dict()
@@ -153,3 +154,22 @@ plt.legend(loc="lower right")
 #plt.show()
 plt.savefig("../build/plots/bow/RNN_bow_roc.pdf")
 plt.close()
+
+X_false = []
+for i in range(len(y_test)):
+    if(y_test.iloc[i]!=y_pred_bool[i]):
+       X_false.append(X.iloc[i])
+    if(len(X_false)==3):
+        break   
+
+reverse_word_map = dict(map(reversed, tokenizer.word_index.items()))
+
+def sequence_to_text(list_of_indices):
+    words = [reverse_word_map.get(letter) for letter in list_of_indices]
+    return(words)
+
+false_texts = list(map(sequence_to_text, X_test))
+for f in false_texts:
+    print("###############################################################")
+    f=list(filter(None,f))
+    print(' '.join(f))    
