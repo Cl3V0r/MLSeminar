@@ -32,7 +32,8 @@ def plotWordcloud(s,t):
 #Visualierung der Zeitungsueberschriften
 plotWordcloud("fake_news_titles_stem","trump_silhouette.png")
 plotWordcloud("fake_news_titles_lem", "trump_silhouette.png")
-plotWordcloud("real_news_titles_lem","statue_of_liberty.png")
+#plotWordcloud("real_news_titles_lem","statue_of_liberty.png")
+plotWordcloud("bow_feature_names","")
 #falsch klassifizierte RNN-Texte
 plotWordcloud("false_classified_rnn","")
 
@@ -46,7 +47,7 @@ X_test = np.sum(X_test, axis=0)/size
 y_test = np.genfromtxt("../build/preprocessed/bow_y_test.txt", unpack=True)
 keys=[]
 dim=1000
-with open("../build/preprocessed/bow_feature_names.txt", "r") as file:
+with open("../build/preprocessed/bow_feature_names.csv", "r") as file:
     for line in file:
         current = line[:-1]
         keys.append(current)
