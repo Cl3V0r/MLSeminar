@@ -32,7 +32,7 @@ def plotWordcloud(s,t):
 #Visualierung der Zeitungsueberschriften
 plotWordcloud("fake_news_titles_stem","trump_silhouette.png")
 plotWordcloud("fake_news_titles_lem", "trump_silhouette.png")
-#plotWordcloud("real_news_titles_lem","statue_of_liberty.png")
+plotWordcloud("real_news_titles_lem","statue_of_liberty.png")
 #falsch klassifizierte RNN-Texte
 plotWordcloud("false_classified_rnn","")
 
