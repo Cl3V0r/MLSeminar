@@ -50,7 +50,7 @@ Daher hat der Datensatz eine große Verzerrung und es kann nur darauf trainiert 
 als fragwürdig klassifiziert werden würden oder ob sie von einem der $10$ als glaubwürdig erachteten Herausgebern stammt.
 
 Zunächst wird der Datensatz mithilfe der \textsc{nltk}-Bibliothek\cite{nltk} durch Lemmatisierung verarbeitet, um 
-alle Wörter auf ihre Stammform zurückzuführen. 
+alle Wörter auf ihre Stammform zurückzuführen (siehe \ref{sec:NLP}). 
 Anschließend werden die Worthäufigkeiten in jedem Text mithilfe der \textsc{scikit-learn}-Bibliothek\cite{scikit-learn} 
 gezählt. 
 Somit ergibt sich das Bag-of-words Modell als Repräsentation des Textes.
@@ -115,13 +115,22 @@ Jedoch wird lieber eine L1-Regularizierung in der ersten hidden Layer verwendet,
 anstatt die Anzahl der Wörter zu verringern, da, wie in \ref{fig:word_plot} zusehen, häufig verwendete Wörter nicht 
 zwangsweise gut zur Trennung geeignet sein müssen.
 
-Das mit Kears\cite{keras} aufgebaute Netz wird mithilfe der \textsc{hyperas}-Bibliothek\cite{hyperas} optimiert und 
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{pictures/modell_scheme.pdf}
+    \caption{Graphische Darstellung des optimierten Modells. Es wurden Tiefe, Breite und Regularizierung mithilfe 
+            des Tree of Parzen Estimator Algorithmus (siehe \ref{sec:TPE}) optimiert.}
+    \label{fig:NN_structure}
+\end{figure}
+
+Das mit Keras\cite{keras} aufgebaute Netz wird mithilfe der \textsc{hyperas}-Bibliothek\cite{hyperas} optimiert und 
 es ergibt sich ein optimaler Classifier, wie er in \ref{fig:NN_structure} dargestellt ist.
+Als Verlustfunktion stellt sich die binäre Kreuzentropie als optimal heraus und als Optimierer der Adagrad Algorithmus.
+Bei dem Adagrad Optimierungs Algorithmus für die Optimierung der Gewichte werden die Standard Einstellungen verwendet, 
+da eine Optimierung der Lernrate und der Zerfallsrate nur zu einem unbeständigen Training geführt hat.
 
 
 \chapter{Ergebnisse}
-Loss Epoch (plot)
-prob auf training und test (overtraining plot)
 Confusion Matrix (plot)
 ROC Curve (plot)
 Confusion hist (plot) [großer mean sodass von generalisieren gesprochen werden kann]
@@ -138,12 +147,43 @@ ROC Curve vergleich (plot)
     \end{subfigure}
     \begin{subfigure}[t]{0.49\textwidth}
         \centering
-        \raisebox{1.5cm}[0pt]{\includegraphics[width=\textwidth]{pictures/prob_bow_best_nn.pdf}}
+        \includegraphics[width=\textwidth]{pictures/prob_bow_best_nn.pdf}
         \caption{Darstellung der Vorhersage bei Trainings und Testdatensatzes.}
         \label{fig:probs}
     \end{subfigure}
-    \caption{Analyse des Modells auf ein mögliches Übertraining, welches }
-    \end{figure}
+    \caption{Analyse des Modells auf ein mögliches Übertraining.}
+\end{figure}
+
+Das Modell wird über $100$ Epochen trainiert und über die Epochen der Trainingsfehler und der Validierungsfehler 
+berechnet und in \ref{fig:history} dargestellt. 
+Da eine Batch Size von $64$ genutzt wird, ist ein langsames Training zu beobachten, jedoch besitzt die Berechnung 
+des Gradienten weniger Fluktuationen und es ist wahrscheinlicher das globale Minimum zu finden. 
+Ab $\approx 50$ Epochen ist das Modell nahezu ausgelernt und der Validierungsfehler bleibt nahezu konstant und 
+nur der Trainingsfehler sinkt. 
+Ab diesem Punkt beginnt das Modell leicht überzutrainieren, jedoch besteht kein starkes Übertraining, was auch in 
+\ref{fig:probs} zusehen ist.
+Die vorhergesagten Likelihoods sind bei Trainings- und Validierungsdatensatz nahezu gleich verteilt.
+Die Verteilungen sind mit einem Schnitt bei $0.5$ gut zu trennen, was auf eine Genauigkeit von $0.87$ für die 
+Fake News Klassifizierung und eine Genauigkeit von $0.89$ für die Real News Klassifizierung führt.
+Jedoch führt die Breite der Fake News Verteilung auf eine erhöhte Kreuzentropie von $0.32$.
+
+\begin{figure}[t!]
+    \centering
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{pictures/cnfsn_mtx_bow_best_nn.pdf}
+        \caption{Confusion Matrix}
+        \label{fig:CM}
+    \end{subfigure}
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{pictures/roc_comparison.pdf}
+        \caption{Receiver Operating Characteristic(ROC)}
+        \label{fig:ROC}
+    \end{subfigure}
+    \caption{Darstellung der Performanz des trainierten Classifiers auf dem unabhängigen Testdatensatz. In \ref{fig:ROC}
+            ist zusätzlich die Performanz des Random Forests abgebildet, welcher als Vergleichsmethode dienen soll.}
+\end{figure}
 
 \chapter{Zusammenfassung}
 Nur vorhersage für diesen Zeitraum
@@ -154,5 +194,8 @@ nur SChreibstil erkennung des BS Filters keine Fake News erkennung
 github Link
 
 \appendix
-\chapter{Bayesian Optimization}
 \chapter{Natural Language Processing}
+\label{sec:NLP}
+
+\chapter{Bayesian Optimization}
+\label{sec:TPE}
