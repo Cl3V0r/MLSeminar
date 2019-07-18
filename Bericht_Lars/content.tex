@@ -81,7 +81,7 @@ jedoch Teil des Schreibstils sind und somit relevant für eine Trennung sein kö
 
 \begin{figure}
     \centering
-    \includegraphics[]{pictures/data_visualisation.pdf}
+    \includegraphics[width=0.8\textwidth]{pictures/data_visualisation.pdf}
     \caption{Darstellung der relativen Worthäufigkeit der $10$ Wörter, mit maximaler Differenz der Mittelwerte.
             Eine Unterschied ist klar zu erkennen, wobei ein Teil dadurch erklärt ist, dass die Texte der Real 
             News im Mittel $\approx 1590$ Zeichen länger sind.}
@@ -131,9 +131,6 @@ da eine Optimierung der Lernrate und der Zerfallsrate nur zu einem unbeständige
 
 
 \chapter{Ergebnisse}
-Confusion Matrix (plot)
-ROC Curve (plot)
-Confusion hist (plot) [großer mean sodass von generalisieren gesprochen werden kann]
 RF erklären 
 ROC Curve vergleich (plot)
 
@@ -153,7 +150,6 @@ ROC Curve vergleich (plot)
     \end{subfigure}
     \caption{Analyse des Modells auf ein mögliches Übertraining.}
 \end{figure}
-
 Das Modell wird über $100$ Epochen trainiert und über die Epochen der Trainingsfehler und der Validierungsfehler 
 berechnet und in \ref{fig:history} dargestellt. 
 Da eine Batch Size von $64$ genutzt wird, ist ein langsames Training zu beobachten, jedoch besitzt die Berechnung 
@@ -184,6 +180,49 @@ Jedoch führt die Breite der Fake News Verteilung auf eine erhöhte Kreuzentropi
     \caption{Darstellung der Performanz des trainierten Classifiers auf dem unabhängigen Testdatensatz. In \ref{fig:ROC}
             ist zusätzlich die Performanz des Random Forests abgebildet, welcher als Vergleichsmethode dienen soll.}
 \end{figure}
+In \ref{fig:CM} ist die Vorhersage des Neuronalen Netzes in einer Confusion Matrix dargestellt. 
+Da die Nebendiagonalen etwas $12\%$ der Daten beinhalten und beide Diagonalelemente(True Positive and True Negative) 
+relativ zum Datenanteil der Wahrheiten gleichermaßen ausgeprägt sind, kann von einem erfolgreichen Training gesprochen 
+werden.
+Auch die Receiver Operating Characteristic(ROC) mit einem Area under Curve(AUC) Wert von $0.94$ spricht dafür, dass 
+der Classifier eine Struktur in den Daten erkannt hat.
+Auch die ROC Kurve zeigt die Schwäche des Modells bei der Erkennung von Fake News, wie auch in \ref{fig:probs} zusehen.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{pictures/cnfn_hist.pdf}
+    \caption{Untersuchung der Fehlklassifizierungen mithilfe der Worthäufigkeiten von Worten denen vom 
+            Modell eine hohe Wichtigkeit beigemessen wird.}
+    \label{fig:CM_i}
+\end{figure}
+Um die Trennung besser zu verstehen, wird die erste Lage des Neuronalen Netzes genauer untersucht.
+Dabei wird
+\begin{equation}
+    g_i = \sum_{j=1}^{N_2}|w_{ij}|
+\end{equation}
+als Wichtigkeit des Wortes $w_i$ interpretiert. Dabei ist $w_{ij}$ das Gewicht von Attribut $i$ zum Neuron $j$ der 
+ersten versteckten Lage und $N_j=1770$ die Breite dieser Lage.
+Die mittlere Häufigkeit der $10$ wichtigsten Worte werden in \ref{fig:CM_i} für die richtig und falsch klassifizierten 
+Texte dargestellt.
+Deutlich zu erkennen ist, dass die Histogramme wie erwartet bei der gleichen Schätzung eine fast gleiche Struktur besitzen.
+Außerdem spielen Stoppwörter wie "the", "to", "and" und "be" eine zentrale Rolle in der Trennung.
+Die Stoppwörter sind klar mit der Textlänge korreliert und da Texte der Real News im Mittel $\num{1590}$ Zeichen 
+länger sind, klassifiziert das Modell, wie in \ref{fig:CM_i} zu sehen, Texte mit einer höheren Worthäufigkeit bei Stoppwörtern 
+als Real News.
+Das Wort "cnn" wird von dem Neuronalen Netz auch als Indiz für einen Real News Text gesehen.
+Dies ist vielleicht damit zu begründen, dass wahre und seriöse Nachrichten sich auf Quellen, wie CNN beziehen und 
+Falschmeldungen keine seriöse Quelle besitzen.
+Das Wort "com" ist ein Indiz auf Internetseiten und kommt in Texten die als Fake News klassifiziert werden häufiger 
+vor.
+Zum einen kann das daran liegen, dass Fake News häufiger Internetquellen haben, jedoch liegt es auch daran das die 
+genutzen Fake News Texte einen freiere blogähnliche Schreibstruktur aufweisen. 
+Im Gegensatz zu den seriösen und strikten Bericht Strukur der Nachrichten aus seriösen Nachrichtendiensten wie die 
+Washington Post.
+In \ref{fig:CM_i} ist jedoch auch zu erkennen, dass die $10$ Wörter in einer der beiden Kategorien im Schnitt mindestens in 
+jedem fünften Text vorkommen. 
+Dies deutet auf eine Generalisierung hin, jedoch sind Wörter wie "2016" klar Zeitbezogen und Texte aus einem anderen 
+Zeitraum werden für das trainierte Modell deutlich schwerer zu klassifizieren sein. 
+
 
 \chapter{Zusammenfassung}
 Nur vorhersage für diesen Zeitraum
