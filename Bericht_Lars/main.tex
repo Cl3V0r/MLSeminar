@@ -1,0 +1,181 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%   Vorlage für eine Abschlussarbeit   %%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Erstellt von Maximilian Nöthe, <maximilian.noethe@tu-dortmund.de>
+% ausgelegt für lualatex und Biblatex mit biber
+
+% Kompilieren mit
+% lualatex dateiname.tex
+% biber dateiname.bcf
+% lualatex dateiname.tex
+% lualatex dateiname.tex
+% oder einfach mit:
+% make
+
+\documentclass[
+  12pt,
+  tucolor,
+  BCOR=12mm,     % 12mm binding corrections, adjust to fit your binding
+  parskip=half,  % new paragraphs start with half line vertical space
+  open=any,      % chapters start on both odd and even pages
+  cleardoublepage=plain,  % no header/footer on blank pages
+]{tudothesis}
+
+\usepackage{setspace}
+\usepackage[a4paper, left=2.5cm, right=2.5cm, top=3.5cm, bottom=3.5cm]{geometry}
+
+
+% Warning, if another latex run is needed
+\usepackage[aux]{rerunfilecheck}
+
+% just list chapters and sections in the toc, not subsections or smaller
+\setcounter{tocdepth}{1}
+
+%------------------------------------------------------------------------------
+%------------------------------ Sprache und Schrift: --------------------------
+%------------------------------------------------------------------------------
+\usepackage{mathptmx}
+\usepackage{fontspec}
+\defaultfontfeatures{Ligatures=TeX}  % -- becomes en-dash etc.
+
+% german language
+\usepackage{polyglossia}
+\setdefaultlanguage{german}
+
+% for english abstract and english titles in the toc
+\setotherlanguages{english}
+
+% intelligent quotation marks, language and nesting sensitive
+\usepackage[autostyle]{csquotes}
+
+% microtypographical features, makes the text look nicer on the small scale
+\usepackage{microtype}
+
+%------------------------------------------------------------------------------
+%------------------------ Für die Matheumgebung--------------------------------
+%------------------------------------------------------------------------------
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+
+% Enable Unicode-Math and follow the ISO-Standards for typesetting math
+\usepackage[
+  math-style=ISO,
+  bold-style=ISO,
+  sans-style=italic,
+  nabla=upright,
+  partial=upright,
+]{unicode-math}
+\setmathfont{Latin Modern Math}
+
+% nice, small fracs for the text with \sfrac{}{}
+\usepackage{xfrac}
+
+
+%------------------------------------------------------------------------------
+%---------------------------- Numbers and Units -------------------------------
+%------------------------------------------------------------------------------
+
+\usepackage[
+  locale=DE,
+  separate-uncertainty=true,
+  per-mode=symbol-or-fraction,
+  binary-units=true
+]{siunitx}
+\sisetup{math-micro=\text{µ},text-micro=µ}
+
+%------------------------------------------------------------------------------
+%-------------------------------- tables  -------------------------------------
+%------------------------------------------------------------------------------
+
+\usepackage{booktabs}       % stellt \toprule, \midrule, \bottomrule
+
+%------------------------------------------------------------------------------
+%-------------------------------- graphics -------------------------------------
+%------------------------------------------------------------------------------
+
+\usepackage{graphicx}
+\usepackage{grffile}
+
+% allow figures to be placed in the running text by default:
+\usepackage{scrhack}
+\usepackage{float}
+\floatplacement{figure}{htbp}
+\floatplacement{table}{htbp}
+
+% keep figures and tables in the section
+\usepackage[section, below]{placeins}
+
+
+%------------------------------------------------------------------------------
+%---------------------- customize list environments ---------------------------
+%------------------------------------------------------------------------------
+
+\usepackage{enumitem}
+
+%------------------------------------------------------------------------------
+%------------------------------ Bibliographie ---------------------------------
+%------------------------------------------------------------------------------
+
+\usepackage[
+  backend=biber,   % use modern biber backend
+  autolang=hyphen, % load hyphenation rules for if language of bibentry is not
+                   % german, has to be loaded with \setotherlanguages
+                   % in the references.bib use langid={en} for english sources
+]{biblatex}
+\addbibresource{references.bib}  % die Bibliographie einbinden
+\DefineBibliographyStrings{german}{andothers = {{et\,al\adddot}}}
+
+%------------------------------------------------------------------------------
+%------------------------------ Sonstiges: ------------------------------------
+%------------------------------------------------------------------------------
+
+\usepackage[pdfusetitle,unicode,linkbordercolor=tugreen]{hyperref}
+
+\AtBeginDocument{%
+\newcaptionname{ngerman}{\figureautorefname}{Abbildung}
+\newcaptionname{ngerman}{\tableautorefname}{Tabelle}
+\newcaptionname{ngerman}{\sectionautorefname}{Kapitel}
+\newcaptionname{ngerman}{\chapterautorefname}{Kapitel}%
+}
+
+\usepackage{bookmark}
+\usepackage[shortcuts]{extdash}
+\usepackage{verbatim}
+
+%------------------------------------------------------------------------------
+%-------------------------    Angaben zur Arbeit   ----------------------------
+%------------------------------------------------------------------------------
+
+\author{Lars Möllerherm}
+\title{Fake News Detektion}
+\division{Fakultät Physik}
+\submissiondate{31. August 2019}
+\firstcorrector{Dr.~Olaf~Nackenhorst}
+\secondcorrector{Dr.~Johannes~Erdmann}
+\eventname{Maschinelles Lernen für Physiker*innen}
+
+% tu logo on top of the titlepage
+\titlehead{\includegraphics[height=1.5cm]{logos/tu-logo.pdf}}
+
+\begin{document}
+\onehalfspacing
+\frontmatter
+\maketitle
+
+% Gutachterseite
+\makecorrectorpage
+\tableofcontents
+\mainmatter
+% Hier beginnt der Inhalt mit Seite 1 in arabischen Ziffern
+\input{content.tex}
+
+% Hier beginnt der Anhang, nummeriert in lateinischen Buchstaben
+%\input{a_anhang.tex}
+
+\backmatter
+\printbibliography
+
+\end{document}

@@ -8,7 +8,7 @@ from keras.preprocessing.sequence import pad_sequences
 from keras.layers.embeddings import Embedding
 from keras.callbacks import TensorBoard, ModelCheckpoint
 from keras.models import load_model
-from sklearn.metrics import accuracy_score, precision_score, recall_score, confusion_matrix, classification_report
+from sklearn.metrics import accuracy_score, precision_score, recall_score, confusion_matrix, classification_report, roc_curve, auc
 from sklearn.model_selection import train_test_split
 
 def plot_history(network_history):
@@ -41,7 +41,7 @@ def evaluate(X_test, Y_test, X_train, Y_train, model):
     print("Precision: %.2f" % precision_score(Y_test, Y_cls, average='weighted'))
     print("Recall: %.2f" % recall_score(Y_test, Y_cls, average='weighted'))
     print('Classification Report:\n', classification_report(Y_test, Y_cls) )
-    #print(confusion_matrix(y_val, y_pred, labels=[0, 1]))
+    print(confusion_matrix(Y_test, Y_cls, labels=[0, 1]))
     ## Plot 0 probability including overtraining test
     plt.figure(figsize=(8, 8))
     label = 1
@@ -61,10 +61,13 @@ def evaluate(X_test, Y_test, X_train, Y_train, model):
     plt.xlabel('Probability of being real news')
     plt.ylabel('Number of entries')
     plt.savefig("../build/plots/hist_rnn_test.pdf")
+    plt.clf()
+
 
 
 df = pd.read_csv("../build/preprocessed/labeled_content_lem_stop.csv")
 df = df.dropna()
+#df = df.iloc[0:800]
 X = df["content"]
 y = df["label"]
 print(np.count_nonzero(y==1),np.count_nonzero(y==0),len(y))
@@ -101,33 +104,87 @@ model.add(MaxPooling1D(pool_size=2))
 model.add(LSTM(128, dropout=0.4, recurrent_dropout=0.4))
 model.add(Dense(1, activation='sigmoid'))
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+<<<<<<< HEAD
 history = model.fit(X_train, Y_train, validation_data=(X_val,y_val),
                     epochs=100, batch_size=8, callbacks=[checkpoint,
                      TensorBoard(log_dir='../build/graph', histogram_freq=50, write_graph=True)])
 hist_df = pd.DataFrame(history.history)
 hist_df.to_csv(path_or_buf = "../build/history_rnn.csv",index=False)
 plot_history(history)
+||||||| merged common ancestors
+history = model.fit(X_train, Y_train, validation_data=(X_val,y_val),
+                    epochs=100, batch_size=8, callbacks=[checkpoint,
+                     TensorBoard(log_dir='../build/graph', histogram_freq=50, write_graph=True)])
+plot_history(history)
+=======
+#history = model.fit(X_train, Y_train, validation_data=(X_val,y_val),
+#                    epochs=100, batch_size=8, callbacks=[checkpoint,
+#                     TensorBoard(log_dir='../build/graph', histogram_freq=50, write_graph=True)])
+#plot_history(history)
+>>>>>>> 6fbc98fc01c97a7e21198411a0a91af6f5ac1a39
 
 best_model = load_model('../model/best_rnn.hdf5')
 evaluate(X_test,y_test,X_train,Y_train,best_model)
 
 y_pred = best_model.predict(X_test, batch_size=8, verbose=1)
-y_pred_bool = np.round(y_pred)
+y_pred_bool = best_model.predict_classes(X_test, batch_size=8, verbose=1)
 
-plt.imshow(confusion_matrix(y_test, y_pred_bool,
-                            labels=[0, 1]))
+plt.imshow(confusion_matrix(y_test, y_pred_bool,labels=[0, 1]))
 plt.tight_layout()
 plt.colorbar()
 plt.xticks(range(2), ["fake", "real"])
 plt.yticks(range(2), ["fake", "real"])
 plt.savefig("../build/plots/cnfsn_mtx_rnn_test.pdf")
 plt.clf()
-y_pred = best_model.predict(X_val, batch_size=8, verbose=1)
-print(classification_report(y_val, y_pred_bool))
-print(confusion_matrix(y_val, y_pred_bool,labels=[0, 1]))
-plt.imshow(confusion_matrix(y_val, y_pred_bool,labels=[0, 1]))
-plt.tight_layout()
-plt.colorbar()
-plt.xticks(range(2), ["fake", "real"])
-plt.yticks(range(2), ["fake", "real"])
-plt.savefig("../build/plots/cnfsn_mtx_rnn_val.pdf")
+#y_pred = best_model.predict(X_val, batch_size=8, verbose=1)
+#y_pred_bool = best_model.predict_classes(X_val, batch_size=8, verbose=1)
+#print(classification_report(y_val, y_pred_bool))
+#print(confusion_matrix(y_val, y_pred_bool,labels=[0, 1]))
+#plt.imshow(confusion_matrix(y_val, y_pred_bool,labels=[0, 1]))
+#plt.tight_layout()
+#plt.colorbar()
+#plt.xticks(range(2), ["fake", "real"])
+#plt.yticks(range(2), ["fake", "real"])
+#plt.savefig("../build/plots/cnfsn_mtx_rnn_val.pdf")
+#plt.clf()
+
+fpr = dict()
+tpr = dict()
+roc_auc = dict()
+fpr, tpr, _ = roc_curve(y_test, y_pred)
+roc_auc = auc(fpr, tpr)
+
+plt.figure()
+lw = 2
+plt.plot(fpr, tpr, color='darkorange',
+         lw=lw, label='ROC curve (area = %0.2f)' % roc_auc)
+plt.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
+plt.xlim([0.0, 1.0])
+plt.ylim([0.0, 1.05])
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Receiver operating characteristic example')
+plt.legend(loc="lower right")
+#plt.show()
+plt.savefig("../build/plots/bow/RNN_bow_roc.pdf")
+plt.close()
+
+X_false = []
+for i in range(len(y_test)):
+    if(y_test.iloc[i]!=y_pred_bool[i]):
+       X_false.append(X_test[i])
+    if(len(X_false)==3):
+        break   
+
+reverse_word_map = dict(map(reversed, tokenizer.word_index.items()))
+
+def sequence_to_text(list_of_indices):
+    words = [reverse_word_map.get(letter) for letter in list_of_indices]
+    return(words)
+
+false_texts = list(map(sequence_to_text, X_false))
+with open("../build/preprocessed/false_classified_rnn.csv","w") as file:
+    for f in false_texts:
+        f=list(filter(None,f))
+        file.write(' '.join(f))    
+        
