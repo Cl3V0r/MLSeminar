@@ -94,7 +94,7 @@ X_train, X_val, Y_train, y_val = train_test_split(x_train, y_train, test_size=0.
 
 filepath = '../model/best_rnn.hdf5'
 checkpoint = ModelCheckpoint(
-    filepath, monitor='val_loss', verbose=1, save_best_only=True)
+    filepath, monitor='accuracy', verbose=1, save_best_only=True)
 
 embedding_vecor_length = 32
 model = Sequential()
@@ -104,10 +104,24 @@ model.add(MaxPooling1D(pool_size=2))
 model.add(LSTM(128, dropout=0.4, recurrent_dropout=0.4))
 model.add(Dense(1, activation='sigmoid'))
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+<<<<<<< HEAD
+history = model.fit(X_train, Y_train, validation_data=(X_val,y_val),
+                    epochs=100, batch_size=8, callbacks=[checkpoint,
+                     TensorBoard(log_dir='../build/graph', histogram_freq=50, write_graph=True)])
+hist_df = pd.DataFrame(history.history)
+hist_df.to_csv(path_or_buf = "../build/history_rnn.csv",index=False)
+plot_history(history)
+||||||| merged common ancestors
+history = model.fit(X_train, Y_train, validation_data=(X_val,y_val),
+                    epochs=100, batch_size=8, callbacks=[checkpoint,
+                     TensorBoard(log_dir='../build/graph', histogram_freq=50, write_graph=True)])
+plot_history(history)
+=======
 #history = model.fit(X_train, Y_train, validation_data=(X_val,y_val),
 #                    epochs=100, batch_size=8, callbacks=[checkpoint,
 #                     TensorBoard(log_dir='../build/graph', histogram_freq=50, write_graph=True)])
 #plot_history(history)
+>>>>>>> 6fbc98fc01c97a7e21198411a0a91af6f5ac1a39
 
 best_model = load_model('../model/best_rnn.hdf5')
 evaluate(X_test,y_test,X_train,Y_train,best_model)
