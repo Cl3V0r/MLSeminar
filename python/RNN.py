@@ -41,7 +41,7 @@ def evaluate(X_test, Y_test, X_train, Y_train, model):
     print("Precision: %.2f" % precision_score(Y_test, Y_cls, average='weighted'))
     print("Recall: %.2f" % recall_score(Y_test, Y_cls, average='weighted'))
     print('Classification Report:\n', classification_report(Y_test, Y_cls) )
-    print(confusion_matrix(y_val, y_pred, labels=[0, 1]))
+    #print(confusion_matrix(y_val, y_pred, labels=[0, 1]))
     ## Plot 0 probability including overtraining test
     plt.figure(figsize=(8, 8))
     label = 1
@@ -91,7 +91,7 @@ X_train, X_val, Y_train, y_val = train_test_split(x_train, y_train, test_size=0.
 
 filepath = '../model/best_rnn.hdf5'
 checkpoint = ModelCheckpoint(
-    filepath, monitor='val_loss', verbose=1, save_best_only=True)
+    filepath, monitor='accuracy', verbose=1, save_best_only=True)
 
 embedding_vecor_length = 32
 model = Sequential()
@@ -104,6 +104,8 @@ model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy']
 history = model.fit(X_train, Y_train, validation_data=(X_val,y_val),
                     epochs=100, batch_size=8, callbacks=[checkpoint,
                      TensorBoard(log_dir='../build/graph', histogram_freq=50, write_graph=True)])
+hist_df = pd.DataFrame(history.history)
+hist_df.to_csv(path_or_buf = "../build/history_rnn.csv",index=False)
 plot_history(history)
 
 best_model = load_model('../model/best_rnn.hdf5')
