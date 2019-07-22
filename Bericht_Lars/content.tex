@@ -31,6 +31,7 @@ die Liste manuell geführt werden muss und es durch Vermeiden der fragwürdigen 
 umgehen. 
 
 \chapter{Struktur und Verarbeitung des Datensatzes}
+\label{sec:struct}
 
 Der Datensatz besteht zu $44\%$ aus Nachrichten die vom B.S. Detektor detektiert wurden und zu $56\%$ aus gesammelten 
 Nachrichten von vertrauenswürdigen Nachrichtendiensten, wie die Washington Post oder die New York Times. Die Nachrichten 
@@ -131,8 +132,6 @@ da eine Optimierung der Lernrate und der Zerfallsrate nur zu einem unbeständige
 
 
 \chapter{Ergebnisse}
-RF erklären 
-ROC Curve vergleich (plot)
 
 \begin{figure}[t!]
     \centering
@@ -154,13 +153,13 @@ Das Modell wird über $100$ Epochen trainiert und über die Epochen der Training
 berechnet und in \ref{fig:history} dargestellt. 
 Da eine Batch Size von $64$ genutzt wird, ist ein langsames Training zu beobachten, jedoch besitzt die Berechnung 
 des Gradienten weniger Fluktuationen und es ist wahrscheinlicher das globale Minimum zu finden. 
-Ab $\approx 50$ Epochen ist das Modell nahezu ausgelernt und der Validierungsfehler bleibt nahezu konstant und 
+Ab $\approx 40$ Epochen ist das Modell nahezu ausgelernt und der Validierungsfehler bleibt nahezu konstant und 
 nur der Trainingsfehler sinkt. 
 Ab diesem Punkt beginnt das Modell leicht überzutrainieren, jedoch besteht kein starkes Übertraining, was auch in 
 \ref{fig:probs} zusehen ist.
 Die vorhergesagten Likelihoods sind bei Trainings- und Validierungsdatensatz nahezu gleich verteilt.
-Die Verteilungen sind mit einem Schnitt bei $0.5$ gut zu trennen, was auf eine Genauigkeit von $0.87$ für die 
-Fake News Klassifizierung und eine Genauigkeit von $0.89$ für die Real News Klassifizierung führt.
+Die Verteilungen sind mit einem Schnitt bei $0.5$ gut zu trennen, was auf eine Genauigkeit von $0.86$ für die 
+Fake News Klassifizierung und eine Genauigkeit von $0.90$ für die Real News Klassifizierung führt.
 Jedoch führt die Breite der Fake News Verteilung auf eine erhöhte Kreuzentropie von $0.32$.
 
 \begin{figure}[t!]
@@ -223,10 +222,65 @@ jedem fünften Text vorkommen.
 Dies deutet auf eine Generalisierung hin, jedoch sind Wörter wie "2016" klar Zeitbezogen und Texte aus einem anderen 
 Zeitraum werden für das trainierte Modell deutlich schwerer zu klassifizieren sein. 
 
+Um Beurteilen zu können, ob das aufwendige Training eines tiefen Neuronalen Netzes notwendig ist oder ob eine einfachere
+Methode des Maschinellen Lernens ähnliche Ergebnisse liefert, wird in \ref{fig:ROC} auch die Performanz eines 
+Random Forests dargestellt. 
+Der Random Forest nutzt genau wie das Neuronale Netz die Worthäufigkeiten des Bag of Words Modells, jedoch 
+werden einfache Schnitte in den Merkmalen verwendet um die Daten zu klassifizieren.
+Der Random Forest besitzt $100$ Entscheidungsbäume mit einer maximalen Tiefe von $10$ und als Trennkriterium wird die 
+Informationsentropie verwendet.
+\ref{fig:ROC} zeigt, dass das Neuronale Netz mit einem AUC Wert von $0.94$ besser klassifiziert als der Random Forest
+mit einem AUC Wert von $0.92$.
+Jedoch erkennt der Random Forest die Fake News mit einer Genauigkeit von $0.87$ wie das Neuronale Netz und ist, wie 
+in der ROC Kurve zu sehen für sehr niedrige Schnitte sogar besser.
+Jedoch ist die Genauigkeit bei der Erkennung der Real News mit $0.81$ deutlich schlechter. 
+Da in die Hyperparameter Optimierung des Random Forests nicht so viel Zeit wie in die Optimierung des Neuronalen 
+Netzes investiert wurde, kann nicht zwingend von einer Überlegenheit des Neuronalen Netzes gesprochen werden.
 
 \chapter{Zusammenfassung}
-Nur vorhersage für diesen Zeitraum
-nur SChreibstil erkennung des BS Filters keine Fake News erkennung 
+
+Abschließend ist festzustellen, dass eine Fake News Erkennung anhand von Worthäufigkeiten in den Nachrichten möglich 
+ist.
+Eine durchschnlittliche Genauigkeit von $0.88$ lässt darauf schließen, dass Unterschiede in Fake und Real News erfasst
+werden können, jedoch zeigt \ref{fig:probs} und \ref{fig:CM_i} deutlich, dass einige Falschnachrichten große 
+Ähnlichkeiten mit wahren Nachrichten haben und somit schwer zu klassifizieren sind.
+
+Jedoch müssen die schon in \ref{sec:struct} erwähnten Einschränkungen in der Definition der Fragestellung noch einmal 
+hervorgehoben werden.
+Die Etikettierung des Datensatzes mithilfe des B.S. Detektors ist keine wahre Fake News Erkennung, da nicht der 
+Wahrheitsgehalt der Texte überprüft wird, sondern nur eine Schwarze Liste von fragwürdigen URLs zu Klassifizierung 
+benutzt wird.
+Daher sind die in diesem Datensatz als Fake News klassifizierten Nachrichten nicht zwangsläufig Falschnachrichten. 
+Die Klassifizierung, die in dieser Arbeit vorgenommen wird, ist strenggenommen ein Filter, der Texte von 
+vertrauenswürdigen Zeitungen und Artikel von Webseiten mit Verbindungen zu URLs auf der Schwarzen Liste trennt.
+Dies begünstigt die Trennung, da der Schreibstil und die Struktur der Texte aufgrund der unterschiedlichen Herkunft 
+durchaus abweichen können. 
+Die Frage, ob der Unterschied in Stil und Struktur eine Verzerrung im Datensatz bewirkt oder ob dies ein 
+legitimes Merkmal darstellt, ist schwer zu beantworten.
+
+Eine klare Verzerrung die in diesem Datensatz besteht, ist jedoch die Tatsache, dass die Daten in einem festen 
+Zeitraum aufgenommen wurden.
+Da jedoch die Thematik der Nachrichten in einem anderen Zeitraum vollkommen unterschiedlich sein kann, wird das 
+Modell Nachrichten aus anderen Zeiträumen nicht so gut trennen können.
+\ref{fig:CM_i} zeigt jedoch, das durchaus von einer Generalisierung gesprochen werden kann, jedoch besitzt die 
+Zahl "2016" ein deutliches Gewicht bei der Trennung.
+Die Wichtigkeit des Wortes leitet sich jedoch aus dem begrenzten Zeitraum des Datensatzes her.
+
+Da die Performanz des Random Forests nahe an der des Neuronalen Netzes liegt und der Bau des Entscheidungsbaumes 
+nur eine Zeitkomplexität von $\Omega(n \log^2 (n))$\cite[96]{understanding_RF} besitzt, ist die Notwendigkeit des 
+Trainings eines tiefen Netzes nicht zwangsläufig gegeben.
+Jedoch besitzt das Neuronale Netz mehr Potential, bei einem größeren Datensatz und einer größerern Rechenkapazität.
+Auch andere NLP Methoden wie "word2vec" oder der BERT Encoder\cite{bert} sind vielversprechende Methoden, die jedoch 
+größere Neuronale Netze benötigen. 
+Eine einfache Analyser der Nachrichten Überschriften mithilfe des Bert Encoders und eines feedforward Neuronalen 
+Netzes besitzt eine Genauigkeit von $0.77$. 
+Die Verarbeitung von ganzen Texten ist jedoch zu rechenaufwendig für dieses Projekt und konnte nicht weiter 
+verfolgt werden.
+Eine andere vielversprechende Methode sind die rückkoppelnden Neuronalen Netze.
+Beide Methoden besitzen die Möglichkeit den Kontext des Textes und nicht allein die Worthäufigkeiten bei der 
+Trennung mit zu berücksichtigen, jedoch ist eine Interpretation der Trennung deutlich schwieriger bis nicht möglich.
+
+
 
 
 \chapter{code}
