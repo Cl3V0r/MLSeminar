@@ -8,6 +8,8 @@ denen die gegebenen Informationen nicht ausreichen, wie in Abbildung \ref{fig:cn
 zu sehen ist. Eventuell könnten aktuellere Methoden, wie ein LSTM (Long-Short-Term-Memory)
 oder Googles \textsc{Bert}(Bidirectional Encoder Representations from Transformers) bessere
 Ergebnisse liefern. Erste Versuche in diese Richtung konnten dies jedoch nicht bestätigen.
+Zudem zeigte sich, dass die Verwendung eines DNN in Zusammenhang mit einem Bag-of-words Modell
+sich nicht als notwendig erweist, sondern ein Random Forest bereits ausreichen könnte.
 
 Die begrenzte Verwendbarkeit dieses Datensatzes zur Klassifizierung zukünftiger Nachrichten  
 werden vorallem durch die Wörter deutlich, die sich auf einen bestimmten Zeitraum beziehen.
@@ -15,4 +17,10 @@ Außerdem sind die Themen des Datensatzes auch inhaltlich durch die Themen des U
 dominiert. Zur Verringerung des so begangenen systematischen Fehlers wird es nötig sein,
 den Datensatz auf größere Zeiträume auszuweiten. Zusätzlich müsste die Liste der Quellen
 stetig aktuell gehalten und manuell erweitert werden, um neue Quellen für Fake News 
-nicht auszuschließen.
+nicht auszuschließen. 
+
+Es kann zudem nicht ausgeschlossen werden, dass von Dritten geprüfte Medien, nicht trotzdem
+Fake News enthalten, sodass diese stets kritisch geprüft werden müssen. Gesellschaftlich
+besteht daher die Aufgabe den Menschen eine natürliche Skepsis zu vermitteln und sie über 
+die Erkennung von Fake News aufzuklären. Machine Learning Algorithmen könnten dann als 
+Frühwarnsysteme eingesetzt werden.
