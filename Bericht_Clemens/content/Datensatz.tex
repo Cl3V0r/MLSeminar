@@ -1,8 +1,8 @@
 \chapter{Charakterisierung und Vorbereitung des Datensatzes}
-Der verwendete Datensatz~\cite{real_data} enthält vorallem englischsprachige Nachrichten aus dem Jahr 
-2016 der Monate Oktober bis Dezember, also vorallem aus der Zeit der US-Präsidentschaftswahl.
+Der verwendete Datensatz~\cite{real_data} enthält englischsprachige Nachrichten aus dem Jahr 
+2016 der Monate Oktober bis Dezember, also aus der Zeit der US-Präsidentschaftswahl.
 Die Eigenschaften der Daten sind dabei der Titel, Text und Herausgeber und werden in die Kategorien 
-Real News und Fake News eingeteilt. Die Fake News Daten wurden dabei dem 
+Real News und Fake News eingeteilt. Die Fake News Daten werden dabei dem 
 \enquote{BS-Detector}~\cite{BS} entnommen. Dieser ist eine Erweiterung für Internetbrowser 
 der eine Website nach URL-Verlinkungen durchsucht, welche in einer manuell geführten 
 Liste unsicherer Quellen auftauchen. Solche unsicheren Quellen veröffentlichen dabei unter anderem 
@@ -13,7 +13,7 @@ Washington Post oder der New York Times.
 
 Im ersten Schritt der Vorbereitung des Datensatzes werden mittels der \textsc{langdetect}-Bibliothek~\cite{google_langdetect}
 alle nicht englischen Artikel aussortiert. Anschließend werden die Texte mittels Lemmatisierung
-der \textsc{nltk}-Bibliothek~\cite{nltk}. Bei dieser Methode werden alle Wörter eines Textes auf ihre Stammform reduziert,
+der \textsc{nltk}-Bibliothek~\cite{nltk} vereinfacht. Bei dieser Methode werden alle Wörter eines Textes auf ihre Stammform reduziert,
 wobei die Funktion des Wortes im Satz berücksichtigt wird. Mittels der Bilbiothek \textsc{Scikit-learn}~\cite{scikit-learn}
 wird der Datensatz zufällig in Trainings-, Validierungs- und Testmenge eingeteilt. Es wird ein 
 Bag-of-words Modell verwendet, mit welchem aus jedem Text ein Vektor erzeugt werden kann. Jede Reihe 
@@ -49,7 +49,7 @@ und dessen Varianz $s$ für die beiden Klassen, lassen sich mit der Diskriminanz
 \end{equation}
 die Wörter finden, an deren Häufigkeiten sich die beiden Klassen gut voneinander trennen
 lassen. Anschaulich entspricht dieses dem Verhältnis von Signal zu Untergrund einer Messung und sollte
-daher möglichst groß werden. Die Wörter die sich nach dieser Methode besonders gut zur Klassifizierung
+daher möglichst groß werden. Die Wörter, die sich nach dieser Methode besonders gut zur Klassifizierung
 eignen, sind in Abbildung \ref{fig:fisher_hist} dargestellt.
 
 \begin{figure}

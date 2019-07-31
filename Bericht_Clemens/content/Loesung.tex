@@ -7,8 +7,7 @@ bestimmter Wörter in den beiden Klassen sehr unterschiedlich sein können (Abbi
 und sich somit Klassen anhand dieser unterscheiden lassen. Da in diesen Wörtern auch Stoppwörter
 auftauchen, werden diese nicht aus dem Datensatz entfernt. Ein zusätzliches Merkmal was sich 
 aus den Worthäufigkeiten ablesen lässt, ist die Gesamtzeichenlänge eines Textes. Dies ist wichtig,
-da Real News im Mittel $1590$ mehr Zeichen besitzen.  
-
+da Real News im Mittel $1590$ mehr Zeichen besitzen.  \\
 Die Wortvektoren des Bag-of-words Modells werden als Eingabe für ein DNN genutzt, welches 
 aus Eingabelage, versteckten Lagen mit \textit{ReLU}-Funktionen und Ausgabelage besteht, deren \textit{sigmoid}-Funktion
 Werte zwischen $0$ für Fake News und $1$ für Real News ausgibt. Zusätzlich wird ein 
@@ -16,9 +15,9 @@ Werte zwischen $0$ für Fake News und $1$ für Real News ausgibt. Zusätzlich wi
 Das Modell wird dabei mithilfe 
 des \textit{sequential}-Modells von \textsc{Keras}~\cite{keras} erzeugt.
 Zur Optimierung der Hyperparameter des Netzes wird die \textsc{hyperas}-Bibliothek~\cite{hyperas} genutzt, die 
-ein \textsc{Keras}-Wrapper für \textsc{hyperopt}, einem Bayesschem-Optimierer. Als Optimierer
+ein \textsc{Keras}-Wrapper für \textsc{hyperopt}, einem Bayesschem-Optimierer, ist. Als Optimierer
 ergibt sich der \textit{adagrad}-Optimierer mit Standardwerten und als Verlustfunktion die 
-\textit{binary~-crossentropy}. Das optimierte Netz ist schemtisch in Abbildung \ref{fig:DNN_model}
+\textit{binary~-crossentropy}. Das optimierte Netz ist schematisch in Abbildung \ref{fig:DNN_model}
 dargestellt.
 
 \begin{figure}
