@@ -1,1 +1,24 @@
-\section{Zusammenfassung und Ausblick}
+\chapter{Zusammenfassung und Ausblick}
+Die eingangs gestellte Fragestellung, ob sich Fake News von Real News mittels 
+Methoden des maschinellen Lernen unterscheiden lassen, kann zumindest eingeschränkt
+auf den verwendeten Datensatz beantwortet werden. Die gute Perfomance des Netzes spricht 
+dafür, dass es prinzipiell möglich ist einen Teil zu unterscheiden, es bleibt aber ein 
+Rest, vorallem von als Real News klassifierten Fake News mit Anteil von $0.14$, bei 
+denen die gegebenen Informationen nicht ausreichen, wie in Abbildung \ref{fig:cnfn_hist}
+zu sehen ist. Eventuell könnten aktuellere Methoden, wie ein LSTM (Long-Short-Term-Memory)
+oder Googles \textsc{Bert}(Bidirectional Encoder Representations from Transformers) bessere
+Ergebnisse liefern. Erste Versuche der Autoren dieser Arbeit können dies jedoch nicht bestätigen.
+Zudem zeigt sich, dass die Verwendung eines DNN in Zusammenhang mit einem Bag-of-words Modell
+sich als nicht notwendig erweist, sondern ein Random Forest bereits ausreichen könnte.\\
+Die begrenzte Verwendbarkeit dieses Datensatzes zur Klassifizierung zukünftiger Nachrichten  
+werden vorallem durch die Wörter deutlich, die sich auf einen bestimmten Zeitraum beziehen.
+Außerdem sind die Themen des Datensatzes auch inhaltlich durch die Themen des US-Wahlkampfes 
+dominiert. Zur Verringerung des so begangenen systematischen Fehlers wird es nötig sein,
+den Datensatz auf größere Zeiträume auszuweiten. Zusätzlich müsste die Liste der Quellen
+stetig aktuell gehalten und manuell erweitert werden, um neue Quellen für Fake News 
+nicht auszuschließen. \\
+Es kann zudem nicht ausgeschlossen werden, dass von Dritten geprüfte Medien, nicht trotzdem
+Fake News enthalten, sodass diese stets kritisch geprüft werden müssen. Gesellschaftlich
+besteht daher die Aufgabe, den Menschen eine natürliche Skepsis zu vermitteln und sie über 
+die Erkennung von Fake News aufzuklären. Machine Learning Algorithmen könnten dann als 
+Frühwarnsysteme eingesetzt werden.
