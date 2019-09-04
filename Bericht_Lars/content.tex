@@ -1,7 +1,7 @@
 \chapter{Motivation}
 \label{sec:motivation}
 
-Als Fake News werden Falschmeldungen bezeichnet, die mit manipulativer Absicht viral verbreitet werden. In dem 
+Als Fake-News werden Falschmeldungen bezeichnet, die mit manipulativer Absicht viral verbreitet werden. In dem 
 "Whitepaper"\cite{facebook}, was Facebook am 27.04.2017 veröffentlichte, werden vier verschiedene Motive und  
 Methoden von Falschnachrichten beschrieben. 
 Zum einen die Verbreitung mit der Absicht, politische Stimmungen 
@@ -12,7 +12,7 @@ zu letzt die bloße Desinformation.
 Die Motive und Methoden werden immer komplexer und aufgrund der hohen Lukrativität\cite{Cynk} wird es immer schwieriger 
 ohne große Eigenrecherche zu erkennen, ob die Nachricht eine Falschmeldung darstellt.
 Da eine Verbreitung in sozialen Netzwerken deutlich einfacher ist und diese Plattformen zunehmend als
-Informationsquelle genutzt werden\cite{nachrichtenquelle}, wächst die Gefahr, die von Fake News ausgeht.
+Informationsquelle genutzt werden\cite{nachrichtenquelle}, wächst die Gefahr, die von Fake-News ausgeht.
 Durch die unaufhaltsame und selbstständige Verbreitung der Nachrichten in den Netzwerken, sind Falschnachrichten schwer 
 zu revidieren und es sollte von Interesse sein den Wahrheitsgehalt schnell überprüfen zu können, um diese
 zu verhindern.
@@ -24,33 +24,40 @@ Likelihood bestimmt, zu der ein Text "Fake" oder "Real" ist.
 Diese Methode kann eine Überprüfung des Inhalts nicht ersetzen, 
 jedoch könnte es bei einer ausreichenden Genauigkeit zu einem vorläufigen Sperren der Nachricht führen, was die 
 unaufhaltsame Verbreitung verhindern würde.
-Eine schon vorhandene Möglichkeit Fake News zu detektieren ist der "B.S. Detector" von Daniel Sieradski\cite{BS}.
+Eine schon vorhandene Möglichkeit Fake-News zu detektieren ist der "B.S. Detector" von Daniel Sieradski\cite{BS}.
 Diese Browser Erweiterung überprüft alle in dem Artikel verlinkten Webseiten auf verdächtige Quellen, indem es die 
 Domains mit einer manuell gepflegten Liste von unzuverlässigen Quellen vergleicht. 
 Nachteile sind, dass verdächtige Quellen nicht unbedingt bedeuten, dass es sich um 
 Falschnachrichten handelt und durch Vermeiden fragwürdiger Quellen kann die Detektion verhindert werden.
 
 
-\chapter{Struktur und Verarbeitung des Datensatzes}
+\chapter{Struktur des Datensatzes}
 \label{sec:struct}
 
 Der Datensatz besteht zu $44\,\%$ aus Nachrichten die vom B.S. Detektor detektiert wurden und zu $56\,\%$ aus gesammelten 
 Nachrichten von vertrauenswürdigen Nachrichtendiensten, wie die Washington Post oder die New York Times. Die Nachrichten 
 sind hauptsächlich auf Englisch und die Falschnachrichten sind vom 25. Oktober 2016 bis 25. November 2016 gesammelt worden. Für den Zeitraum 
-der Real News ist Oktober bis November 2016 angegeben. 
-Der Fake News Datensatz ist auf Kaggle.com zu finden\cite{fake_data} und die Real News werden in einem Kernel hinzugefügt\cite{real_data}.
+der Real-News ist Oktober bis November 2016 angegeben. 
+Der Fake-News Datensatz ist auf Kaggle.com zu finden\cite{fake_data} und die Real-News werden in einem Kernel hinzugefügt\cite{real_data}.
 Nach dem Aussortieren der nicht englischsprachigen Texte mithilfe der \textsc{langdetect}-Bibliothek\cite{langdetect}, welche die
 Language Detection Bibliothek von Google\cite{google_langdetect} nutzt, hat der gesamte Datensatz eine Größe von 
 $\num{27903}$ Nachrichten.
 
 Aufgrund des gegebenen Datensatzes kann die Fragestellung dieser Arbeit nur eingeschränkt formuliert werden.
-Mithilfe dieses Datensatzes kann keine allgemeine Fake News Erkennung trainiert werden, da hier nicht der Inhalt 
-ausschlaggeben für die Klassifizierung der Trainingsdaten ist, sondern der B.S. Detektor und somit die Quellen des 
+Mithilfe dieses Datensatzes kann keine allgemeine Fake-News-Erkennung trainiert werden, da hier nicht der Inhalt 
+ausschlaggeben für die Etikettierung der Trainingsdaten ist, sondern der B.S. Detektor und somit die Quellen des 
 Artikels. 
-Zudem gibt es in dem Real News Datensatz nur $10$ verschiedene Herausgeber.
+Zudem gibt es in dem Real-News Datensatz nur $10$ verschiedene Herausgeber.
 Daher hat der Datensatz eine große Verzerrung und es kann nur darauf trainiert werden, ob Texte vom B.S. Detektor 
 als fragwürdig klassifiziert werden würden oder ob sie von einem der $10$ als glaubwürdig erachteten Herausgebern stammt.
 Zudem sind die Thematiken der Texte auf den Zeitraum Oktober bis November 2016 beschränkt.
+Auch die Tatsache, dass Texte des Real-News Datensatzes eine klare Artikelstrukur haben, sorgt für eine Verzerrung.
+Wie allgemeinegültig der Datensatz und der trainierte Classifier sind und ob die Textstruktur ein legitimes Attribut für 
+die Fake-News-Erkennung ist oder nicht, wird in der anschließenden Diskussion genauer beleuchtet.
+
+
+\chapter{Lösungsansatz}
+\label{sec:ansatz}
 
 Zunächst wird der Datensatz mithilfe der \textsc{nltk}-Bibliothek\cite{nltk} durch Lemmatisierung verarbeitet, um 
 alle Wörter auf ihre Stammform zurückzuführen (siehe \autoref{sec:NLP}). 
@@ -60,29 +67,27 @@ Somit ergibt sich das Bag-of-words Modell als Repräsentation des Textes.
 Auf eine Aussortieren der Stoppwörter wird verzichtet, da diese zwar nicht relevant für den Inhalt der Nachricht sind,
 jedoch Teil des Schreibstils sind und somit relevant für eine Trennung sein können.
 Um zu generalisieren werden nur die $500$ im Trainingsdatensatz am häufigsten Verwendeten Wörter genutzt. 
-Somit werden Wörter die nur in einzelnen Texten verwendet werden ignoriert und ein Übertraining ist schwieriger.
-
-\begin{comment}
-    \begin{figure}[t!]
+Somit werden Wörter, die nur in einzelnen Texten verwendet werden, ignoriert, um ein Übertraining zu erschweren.
+Die Worthäufigkeiten sind in \autoref{fig:wordcloud} dargestellt, wobei die Worthäufigkeit als Größe des Wortes codiert
+ist.
+\begin{figure}[t!]
     \centering
     \begin{subfigure}[t]{0.45\textwidth}
         \centering
         \includegraphics[width=\textwidth]{pictures/fake_wordcloud.pdf}
-        \caption{Fake News}
+        \caption{Fake-News}
     \end{subfigure}
     \begin{subfigure}[t]{0.54\textwidth}
         \centering
         \raisebox{1.5cm}[0pt]{\includegraphics[width=\textwidth]{pictures/real_wordcloud.pdf}}
-        \caption{Real News}
+        \caption{Real-News}
     \end{subfigure}
-    \caption{Mit \textsc{wordcloud} \cite{wordcloud} erstellte Darstellung der Worthäufigkeiten für Real und Fake News.}
+    \caption{Mit \textsc{wordcloud} \cite{wordcloud} erstellte Darstellung der Worthäufigkeiten für Real- und Fake-News.}
     \label{fig:wordcloud}
-    \end{figure}
-\end{comment}
-
-
-\chapter{Lösungsansatz}
-\label{sec:ansatz}
+\end{figure}
+Die häufigsten Worte sind selbstverständlich die Stoppwörter.
+Themenbezogene Wörter sind bespielsweise "trump", "clinton" und "election", was daran liegt, dass der Veröffentlichungszeitraum 
+der Artikel mit dem der US-Wahl 2016 übereinstimmt. 
 
 \begin{figure}
     \centering
@@ -104,19 +109,17 @@ Dabei ist $\overline{w_k}$ das arithmetische Mittel und $s_{k}^{2}=\frac{1}{N_k}
 die Stichproben Varianz.
 Wörter mit großen Distanzen zwischen den Mittelwerten relativ zu der Streuung können gut zur Trennung genutzt werden, was 
 jedoch nicht bedeutet, dass auch das Neuronale Netz diesen Wörtern großes Gewicht zuschreibt.
-In \autoref{fig:word_plot} ist zu erkennen, dass Real und Fake News durchaus anhand der Worthäufigkeit zu unterscheiden sind. 
+In \autoref{fig:word_plot} ist zu erkennen, dass Real- und Fake-News durchaus anhand der Worthäufigkeit zu unterscheiden sind. 
 Da die Wörter in \autoref{fig:word_plot} nicht themenspezifischen sind, deutet es daraufhin, dass eine unterschiedliche 
 Ausdrucksweise ausschlaggeben ist. 
-Zum Beispiel scheinen Wochentage in den Real News häufiger verwendet zu werden. 
+Zum Beispiel scheinen Wochentage in den Real-News häufiger verwendet zu werden. 
 Das kann zum Teil daran liegen, dass bei Fakten ein genauer Zeitpunkt erwähnt werden kann und bei Falschnachrichten, die 
 nur auf eine emotionale Reaktion zielen, ist der genaue Zeitpunkt des Ereignisses nicht existent und auch nicht relevant.
-Zu beachten ist, dass Real News im Mittel $\num{1590}$ Zeichen länger sind als Fake News und somit Real News durchschnittlich
-eine höhere relative Häufigkeit besitzen.
-Dies ist jedoch auch ein Attribut, welches aus dem BoW Modell generiert und genutzt werden kann.
+Zu beachten ist, dass Real-News im Mittel $\num{1590}$ Zeichen länger sind als Fake-News und somit Real-News durchschnittlich
+eine höhere relative Häufigkeit besitzen, was auch in \autoref{fig:word_plot} zusehen ist.
 Des Weiteren scheinen Stoppwörter, wie "whether", relevant zu sein, weshalb sie mit in die Analyse genommen werden.
 
-Die $500$ Wörter, die wie in \autoref{sec:struct} beschrieben generiert werden, werden als Attribute 
-für die Input-Lage des Deep-Feedforward Neural Networks verwendet. 
+Die $500$ Wörter werden als Attribute für die Input-Lage des Deep-Feedforward Neural Networks verwendet. 
 Da, wie in \autoref{fig:word_plot} zusehen, häufig verwendete Wörter nicht zwangsweise gut zur Trennung geeignet 
 sein müssen, wird, anstatt die Anzahl der verwendeten Wörter zu verringern, in der ersten versteckten Lage eine 
 L1-Regularisierung verwendet, um eine Überanpassung zu verhindern.
@@ -129,12 +132,12 @@ L1-Regularisierung verwendet, um eine Überanpassung zu verhindern.
     \label{fig:NN_structure}
 \end{figure}
 
-Das mit Keras\cite{keras} aufgebaute Netz wird mithilfe der \textsc{hyperas}-Bibliothek\cite{hyperas} optimiert und 
-es ergibt sich der in \autoref{fig:NN_structure} dargestellte Classifier.
+Das mit Keras\cite{keras} aufgebaute Netz wird mithilfe der \textsc{hyperas}-Bibliothek\cite{hyperas} optimiert, was 
+zu dem in \autoref{fig:NN_structure} dargestellten Classifier führt.
 Als Verlustfunktion stellt sich die binäre Kreuzentropie als optimal heraus und als Optimierer der Adagrad Algorithmus.
 Bei dem Adagrad Algorithmus werden die Standard Einstellungen verwendet, 
-da eine Optimierung der Lern- und Zerfallsrate zu einem unbeständigen Training geführt hat und die Optimierung in einem 
-lokalen Minimum endete.
+da eine Optimierung der Lern- und Zerfallsrate zu einem unbeständigen Training geführt hat und somit das Training häufig 
+in einem lokalen Minimum endete.
 
 
 \chapter{Ergebnisse und Interpretation}
@@ -150,7 +153,7 @@ lokalen Minimum endete.
     \includegraphics[width=0.7\textwidth]{pictures/prob_bow_best_nn.pdf}
     \caption{Darstellung der Vorhersage bei Trainings und Testdatensatzes. Der Vergleich der Vorhersagen für den 
             Trainings- und Testdatensatz lässt kein Übertraining erkennen. Die Verteilung der Likelihood 
-            für die Fake News ist breiter als die der Real News, was zu einer erhöhten Kreuzentropie führt.}
+            für die Fake-News ist breiter als die der Real-News, was zu einer erhöhten Kreuzentropie führt.}
     \label{fig:probs}
 \end{figure}
 
@@ -162,10 +165,10 @@ Ab $\approx 40$ Epochen ist das Modell nahezu ausgelernt, da der Validierungsfeh
 nur der Trainingsfehler weiter sinkt.
 Für das beste Modell besteht jedoch kein Übertraining, was auch in \autoref{fig:probs} zusehen ist.
 Die vorhergesagten Likelihoods sind bei Trainings- und Validierungsdatensatz nahezu gleich verteilt und die 
-Genauigkeit für Trainingsdatensatz ist nur leicht über der des Testdatensatzes.
+Genauigkeit für Trainingsdatensatz liegt nur leicht über der des Testdatensatzes.
 Die Verteilungen sind mit einem Schnitt bei $0.5$ gut zu trennen, was auf eine Genauigkeit von $0.86$ für die 
-Fake News Klassifizierung und eine Genauigkeit von $0.90$ für die Real News Klassifizierung führt.
-Die Breite der Fake News Verteilung führt jedoch auf eine erhöhte Kreuzentropie von $0.32$.
+Fake-News Klassifizierung und eine Genauigkeit von $0.90$ für die Real-News-Klassifizierung führt.
+Die Breite der Fake-News Verteilung führt jedoch auf eine erhöhte Kreuzentropie von $0.32$.
 
 \begin{figure}
     \centering
@@ -177,18 +180,18 @@ Die Breite der Fake News Verteilung führt jedoch auf eine erhöhte Kreuzentropi
     \centering
     \includegraphics[width=0.7\textwidth]{pictures/roc_comparison.pdf}
     \caption{Die Receiver Operating Characteristic(ROC) für das Neuronale Netzwerk und den Random Forest. Wobei 
-            das Neuronale Netz besser klassifiziert, jedoch die Breite der Fake News Verteilung in \ref{fig:probs}
+            das Neuronale Netz besser klassifiziert, jedoch die Breite der Fake-News Verteilung in \ref{fig:probs}
             zu einer schlechteren Performanz des Neuronalen Netzes bei geringen Schwellwerten führt.}
     \label{fig:ROC}
 \end{figure}
 
-In \autoref{fig:CM} ist die Vorhersage des Neuronalen Netzes in einer Confusion Matrix dargestellt. 
+In \autoref{fig:CM} sind die Vorhersagen des Neuronalen Netzes in einer Confusion Matrix dargestellt. 
 Da die Nebendiagonalen etwa $12\%$ der Daten beinhalten und beide Diagonalelemente(True Positive und True Negative) 
 relativ zum Datenanteil der Wahrheiten gleichermaßen ausgeprägt sind, kann von einem erfolgreichen Training gesprochen 
 werden.
 Auch die Receiver Operating Characteristic(ROC) in \autoref{fig:ROC} mit einem Area under Curve(AUC) Wert von $0.94$ spricht dafür, dass 
 der Classifier eine Struktur in den Daten erkannt hat.
-Die ROC Kurve zeigt auch die Schwäche des Modells bei der Erkennung von Fake News, hier an der schlechten 
+Die ROC Kurve zeigt jedoch die Schwäche des Modells bei der Erkennung von Fake-News, hier an der schlechten 
 Performanz für niedrige Schwellwerte zu sehen.
 Dies ist auch in \autoref{fig:probs} zusehen und führt auf die erhöhte Kreuzentropie.
 
@@ -212,16 +215,16 @@ Texte dargestellt.
 Deutlich zu erkennen ist, dass die Histogramme bei der gleichen Schätzung eine fast gleiche Struktur besitzen, was 
 die Fehlklassifizierung erklärt.
 Wie schon in \autoref{sec:ansatz} vermutet, spielen Stoppwörter wie "the", "to", "and" und "be" eine zentrale Rolle in der Trennung.
-Die Stoppwörter sind klar mit der Textlänge korreliert und da Texte der Real News im Mittel $\num{1590}$ Zeichen 
+Die Stoppwörter sind klar mit der Textlänge korreliert und da Texte der Real-News im Mittel $\num{1590}$ Zeichen 
 länger sind, klassifiziert das Modell, wie in \autoref{fig:CM_i} zu sehen, Texte mit einer höheren Worthäufigkeit bei Stoppwörtern 
-als Real News.
-Das Wort "cnn" wird von dem Neuronalen Netz auch als Indiz für einen Real News Text gesehen.
+als Real-News.
+Das Wort "cnn" wird von dem Neuronalen Netz auch als Indiz für einen Real-News Text gesehen.
 Dies ist vielleicht damit zu begründen, dass wahre und seriöse Nachrichten sich auf Quellen, wie CNN beziehen und 
 Falschmeldungen keine seriöse Quelle besitzen.
-Das Wort "com" ist ein Indiz auf Internetseiten und kommt in Texten die als Fake News klassifiziert werden häufiger 
+Das Wort "com" ist ein Indiz auf Internetseiten und kommt in Texten die als Fake-News klassifiziert werden häufiger 
 vor.
-Zum einen kann das daran liegen, dass Fake News häufiger Internetquellen nutzen, jedoch liegt es auch daran, dass die 
-im Datensatz benutzten Fake News Texte einen freiere blogähnliche Schreibstruktur aufweisen. 
+Zum einen kann das daran liegen, dass Fake-News häufiger Internetquellen nutzen, jedoch liegt es auch daran, dass die 
+im Datensatz benutzten Fake-News Texte einen freiere blogähnliche Schreibstruktur aufweisen. 
 Im Gegensatz zu der seriösen und strikten Bericht Struktur der Nachrichten aus den seriösen Nachrichtendiensten.
 In \autoref{fig:CM_i} ist auch zu erkennen, dass die $10$ Wörter in einer der beiden Kategorien im Schnitt mindestens in 
 jedem fünften Text vorkommen, was auf eine Generalisierung hindeutet.
@@ -232,36 +235,36 @@ Um Beurteilen zu können, ob das aufwendige Training eines tiefen Neuronalen Net
 Methode des Maschinellen Lernens ähnliche Ergebnisse liefert, wird in \autoref{fig:ROC} zusätzlich die Performanz eines 
 Random Forests dargestellt.
 Der Random Forest nutzt genau wie das Neuronale Netz die Worthäufigkeiten des Bag of Words Modells, jedoch 
-werden Schnitte in den Merkmalen verwendet, um die Daten zu klassifizieren.
+werden bei dem Random Forest Schnitte in den Merkmalen verwendet, um die Daten zu klassifizieren.
 Für das Training wird der Random Forest aus der \textsc{scikit-learn}-Bibliothek\cite{scikit-learn} verwendet.
 Der trainierte Random Forest besitzt $100$ Entscheidungsbäume mit einer maximalen Tiefe von $10$ und als Trennkriterium wird die 
 Informationsentropie verwendet.
 \autoref{fig:ROC} zeigt, dass das Neuronale Netz mit einem AUC Wert von $0.94$ besser klassifiziert als der Random Forest
 mit einem AUC Wert von $0.92$.
-Jedoch erkennt der Random Forest die Fake News mit einer Genauigkeit von $0.87$ wie das Neuronale Netz und ist, wie 
+Jedoch erkennt der Random Forest die Fake-News mit einer Genauigkeit von $0.87$ wie das Neuronale Netz und ist, wie 
 in der ROC Kurve zu sehen für sehr niedrige Schnitte besser.
-Jedoch ist die Genauigkeit bei der Erkennung der Real News mit $0.81$ schlechter als die Genauigkeit des Neuronalen 
+Jedoch ist die Genauigkeit bei der Erkennung der Real-News mit $0.81$ schlechter als die Genauigkeit des Neuronalen 
 Netzes mit $0.90$. 
 Da in die Hyperparameter Optimierung des Random Forests weniger Zeit wie in die Optimierung des Neuronalen 
 Netzes investiert wurde, kann nicht zwingend von einer Überlegenheit des Neuronalen Netzes gesprochen werden.
 
 
 \chapter{Zusammenfassung und Diskussion}
-Abschließend ist festzustellen, dass eine Fake News Erkennung anhand von Worthäufigkeiten in den Nachrichten möglich 
-ist.
-Eine durchschnittliche Genauigkeit von $0.88$ lässt darauf schließen, dass Unterschiede in Fake und Real News erfasst
+Abschließend ist festzustellen, dass eine Fake-News-Erkennung anhand von Worthäufigkeiten in den Nachrichten durchaus 
+möglich ist.
+Eine durchschnittliche Genauigkeit von $0.88$ lässt darauf schließen, dass Unterschiede in Fake und Real-News erfasst
 werden können.
 Jedoch zeigt \autoref{fig:probs} und \autoref{fig:CM_i} deutlich, dass einige Falschnachrichten große 
 Ähnlichkeiten mit wahren Nachrichten haben und somit schwer zu klassifizieren sind.
 
 Auch die schon in \autoref{sec:struct} erwähnten Einschränkungen in der Definition der Fragestellung dürfen nicht 
 vergessen werden.
-Die Etikettierung des Datensatzes mithilfe des B.S. Detektors ist keine wahre Fake News Erkennung, da nicht der 
-Wahrheitsgehalt der Texte überprüft wird, sondern nur eine schwarze Liste von fragwürdigen URLs zur Klassifizierung 
+Die Etikettierung des Datensatzes mithilfe des B.S. Detektors ist keine wahre Fake-News Erkennung, da nicht der 
+Wahrheitsgehalt der Texte überprüft wird, sondern nur eine Liste von fragwürdigen URLs zur Klassifizierung 
 verwendet wird.
-Daher sind die in diesem Datensatz als Fake News klassifizierten Nachrichten nicht zwangsläufig Falschnachrichten. 
+Daher sind die in diesem Datensatz als Fake-News klassifizierten Nachrichten nicht zwangsläufig Falschnachrichten. 
 Die Klassifizierung, die in dieser Arbeit vorgenommen wird, ist viel mehr ein Filter, der Texte von 
-vertrauenswürdigen Zeitungen und Artikel von Webseiten mit Verbindungen zu URLs auf der Schwarzen Liste trennt.
+vertrauenswürdigen Zeitungen und Artikel von Webseiten mit Verbindungen zu URLs auf der "Schwarzen Liste" trennt.
 
 Zudem kann der Schreibstil und die Struktur der Texte aufgrund der unterschiedlichen Herkunft 
 durchaus abweichen.
@@ -270,7 +273,7 @@ zu erkennen.
 Die Frage, ob der Unterschied in Stil und Struktur eine Verzerrung im Datensatz bewirkt oder ob dies ein 
 legitimes Merkmal darstellt, ist schwer zu beantworten.
 Jedoch sind wahre Nachrichten, die keine Artikel ähnliche Struktur aufweisen, in dem Trainingsdatensatz nicht 
-vorhanden und somit kann das Neuronale Netz nur Real News dieser Struktur erkennen.
+vorhanden und somit ist die Detektion dieser Nachrichten schwerer.
 Das Netz ist zum Beispiel nicht auf Kurznachrichten trainiert und wird daher Probleme bei dieser Form der Nachrichten 
 haben.
 
@@ -296,13 +299,14 @@ verfolgt werden.
 Eine andere vielversprechende Methode sind rückkoppelnden Neuronalen Netze, welche auch auf gute vorläufige Ergebnisse 
 geführt haben.
 Beide Methoden besitzen die Möglichkeit den Kontext des Textes und nicht allein die Worthäufigkeiten bei der 
-Trennung mit zu berücksichtigen, jedoch ist eine Interpretation der Trennung deutlich schwieriger bis nicht möglich.
+Trennung mit zu berücksichtigen, was zu einer besseren Klassifizierung führen kann.
+Jedoch ist eine Interpretation der Trennung deutlich schwieriger bis nicht möglich.
 
-Aufgrund der genannten Kritikpunkte ist deutlich geworden, dass eine Fake News Detektion anhand der Worthäufigkeiten 
+Aufgrund der genannten Kritikpunkte ist deutlich geworden, dass eine Fake-News-Detektion anhand der Worthäufigkeiten 
 durchaus Probleme birgt und das der genutzte Datensatz auch Schwachstellen besitzt.
 Eine mühsame Überprüfung des Wahrheitsgehalts der Texte ist unabdingbar, um eine faire Detektion durchzuführen.
 Jedoch sind die Methode des Maschinellen Lernens durchaus in der Lage eine schnelle 
-vorläufige Fake News Warnung auszugeben, die, wie in \autoref{sec:motivation} beschrieben, eine unaufhaltsame 
+vorläufige Fake-News-Warnung auszugeben, die, wie in \autoref{sec:motivation} beschrieben, eine unaufhaltsame 
 Verbreitung verhindern könnte.
 
 
@@ -310,7 +314,7 @@ Verbreitung verhindern könnte.
 \chapter{Natural Language Processing}
 \label{sec:NLP}
 Bei Methoden des Natural Language Processing geht es darum Texte und Sprache maschinell zu Verarbeiten. Dabei 
-sollen nicht nur Wörter, sondern auch in Sätze und ganze Texte die Bedeutung zu erfassen und zu verarbeiten. 
+sollen nicht nur Wörter, sondern auch in Sätzen und ganzen Texten die Bedeutung erfasst werden. 
 Die Methode des Bag-of-words, die in dieser Arbeit verwendet wird, ist eine Darstellung des Textes anhand der 
 Worthäufigkeiten. 
 Dabei können das Vokabular und die Häufigkeit von bekannten Wörtern extrahiert werden. 
@@ -349,6 +353,9 @@ Jedoch nutzen sie vorhandenes Prior Wissen für die Optimierung und sind somit e
 
 \chapter{code}
 Der Code für das Modell dieses Berichts ist in dem beigefügten .zip File zu finden. 
+Der Datensatz muss jedoch zusätzlich unter \cite{real_data} heruntergeladen werden und unter 
+"/data/mixed\_data/" hinzugefügt werden. 
+Die trainierten Modelle sind in dem Git-Repository (https://github.com/Cl3V0r/MLSeminar) unter "model/" zu finden.
 
 Das ganze Projekt mit zusätzlichen Modellen, befindet sich auf github unter https://github.com/Cl3V0r/MLSeminar,
 jedoch sind nicht zwangsläufig alle Skripts in diesem Repository optimiert.
